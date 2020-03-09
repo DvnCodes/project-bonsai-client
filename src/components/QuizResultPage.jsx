@@ -13,7 +13,7 @@ class QuizResultPage extends Component {
 
   componentDidMount() {
     const socket = socketIOClient("localhost:8080");
-    socket.emit("player ready", this.props.score);
+    socket.emit("set health", this.props.score);
   }
 }
 
