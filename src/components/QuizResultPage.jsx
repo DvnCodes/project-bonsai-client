@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import socketIOClient from "socket.io-client";
 
 class QuizResultPage extends Component {
   render() {
@@ -6,8 +7,13 @@ class QuizResultPage extends Component {
       <div>
         <h2>Results</h2>
         <p>You scored: {this.props.score}</p>
+        <button>Ready to play game</button>
       </div>
     );
+  }
+
+  componentDidMount() {
+    // const socket = socketIOClient("localhost:8080");
   }
 }
 

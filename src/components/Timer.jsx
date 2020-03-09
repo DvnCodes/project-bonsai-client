@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import socketIOClient from "socket.io-client";
 
 class Timer extends Component {
   state = {
-    currentCount: 30
+    currentCount: 3
   };
+
   render() {
     return (
       <div>
@@ -26,12 +26,6 @@ class Timer extends Component {
     });
     if (this.state.currentCount < 1) {
       clearInterval(this.intervalId);
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    console.log("cdu");
-    if (prevState.currentCount === 1) {
       this.props.quizOver();
     }
   }
