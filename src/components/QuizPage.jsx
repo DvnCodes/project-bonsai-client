@@ -13,28 +13,39 @@ class QuizPage extends Component {
     currentQuestion: 0,
     answer: null,
     score: 0,
+    answeredAll: false,
     quizOver: false
   };
 
   render() {
     const { questions, currentQuestion } = this.state;
     let answers;
+
     if (questions[currentQuestion]) {
       answers = [
         questions[currentQuestion].correctA,
         ...questions[currentQuestion].incorrectAs
       ];
     }
+
     return (
       <div>
-        <h1>Quiz Page</h1>
-        <Timer quizOver={this.quizOver} />
-        {this.state.quizOver ? (
+        <h1>Quiz</h1>
+        {!this.state.quizOver ? (
+          <Timer seconds={5} timeUp={this.quizOver} />
+        ) : (
+          <>
+            <h2>Game Starting in:</h2>
+            <Timer seconds={10} timeUp={this.startGame} />
+          </>
+        )}
+        {this.state.answeredAll ? (
           <QuizResultPage score={this.state.score} />
         ) : (
           <>
-            <h2>{questions[currentQuestion].q}</h2>
             <p>Score: {this.state.score}</p>
+
+            <h2>{questions[currentQuestion].q} = ?</h2>
             <ul>
               {answers.map((answer, i) => {
                 return (
@@ -52,29 +63,32 @@ class QuizPage extends Component {
 
   handleAnswer = e => {
     const { questions, currentQuestion } = this.state;
-    if (currentQuestion + 1 === questions.length) {
-      return this.quizOver();
-    }
 
     if (e.target.innerText === questions[currentQuestion].correctA) {
-      console.log("correct answer");
       this.setState(currentState => {
         const nextQuestion = currentState.currentQuestion + 1;
         const newScore = currentState.score + 1;
         return { currentQuestion: nextQuestion, score: newScore };
       });
     } else {
-      console.log("incorrect answer");
       this.setState(currentState => {
         const nextQuestion = currentState.currentQuestion + 1;
         return { currentQuestion: nextQuestion };
       });
     }
+    if (currentQuestion + 1 === questions.length) {
+      return this.answeredAll();
+    }
   };
 
+  answeredAll = () => {
+    this.setState({ answeredAll: true });
+  };
   quizOver = () => {
-    console.log("quiz over");
-    this.setState({ quizOver: true });
+    this.setState({ quizOver: true, answeredAll: true });
+  };
+  startGame = () => {
+    console.log("START GAME");
   };
 }
 

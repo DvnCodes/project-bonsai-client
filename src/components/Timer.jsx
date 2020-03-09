@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 class Timer extends Component {
   state = {
-    currentCount: 3
+    currentCount: null
   };
 
   render() {
@@ -14,6 +14,7 @@ class Timer extends Component {
   }
 
   componentDidMount() {
+    this.setState({ currentCount: this.props.seconds });
     this.intervalId = setInterval(this.timer.bind(this), 1000);
   }
   componentWillUnmount() {
@@ -26,9 +27,16 @@ class Timer extends Component {
     });
     if (this.state.currentCount < 1) {
       clearInterval(this.intervalId);
-      this.props.quizOver();
+      this.props.timeUp();
     }
   }
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   console.log("cdu");
+  //   if (prevState.currentCount === 1) {
+  //     this.props.quizOver();
+  //   }
+  // }
 }
 
 export default Timer;

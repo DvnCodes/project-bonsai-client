@@ -1,3 +1,9 @@
 .correctAnswer {
   background-color: green;
 }
+
+body {
+  background-color: grey;
+  margin: 50px;
+  text-align: center;
+}

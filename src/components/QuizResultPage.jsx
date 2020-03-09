@@ -7,13 +7,13 @@ class QuizResultPage extends Component {
       <div>
         <h2>Results</h2>
         <p>You scored: {this.props.score}</p>
-        <button>Ready to play game</button>
       </div>
     );
   }
 
   componentDidMount() {
-    // const socket = socketIOClient("localhost:8080");
+    const socket = socketIOClient("localhost:8080");
+    socket.emit("player ready", this.props.score);
   }
 }
 
