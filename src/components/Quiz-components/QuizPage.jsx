@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Timer from "./Timer";
 import QuizResultPage from "./QuizResultPage";
 import socketIOClient from "socket.io-client";
+const socket = socketIOClient("localhost:8084");
 
 class QuizPage extends Component {
   state = {
@@ -20,7 +21,6 @@ class QuizPage extends Component {
   };
 
   componentDidMount() {
-    const socket = socketIOClient("localhost:8084");
     socket.on("beginQuiz", data => {
       this.setState({ questions: data.quizQuestions });
     });
