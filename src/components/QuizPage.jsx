@@ -1,21 +1,30 @@
 import React, { Component } from "react";
 import Timer from "./Timer";
 import QuizResultPage from "./QuizResultPage";
+import socketIOClient from "socket.io-client";
 
 class QuizPage extends Component {
   state = {
     questions: [
-      { q: "3 x 3", correctA: "9", incorrectAs: ["1", "2", "3"] },
-      { q: "2 + 6", correctA: "8", incorrectAs: ["4", "5", "6"] },
-      { q: "7 - 5", correctA: "2", incorrectAs: ["1", "4", "3"] },
-      { q: "9 x 9", correctA: "81", incorrectAs: ["72", "99", "18"] }
+      // { q: "3 x 3", correctA: "9", incorrectAs: ["1", "2", "3"] },
+      // { q: "2 + 6", correctA: "8", incorrectAs: ["4", "5", "6"] },
+      // { q: "7 - 5", correctA: "2", incorrectAs: ["1", "4", "3"] },
+      // { q: "9 x 9", correctA: "81", incorrectAs: ["72", "99", "18"] }
     ],
+    answers: [],
     currentQuestion: 0,
     answer: null,
     score: 0,
     answeredAll: false,
     quizOver: false
   };
+
+  componentDidMount() {
+    const socket = socketIOClient("localhost:8080");
+    socket.on("beginQuiz", data => {
+      this.setState({ questions: data.quizQuestions });
+    });
+  }
 
   render() {
     const { questions, currentQuestion } = this.state;
