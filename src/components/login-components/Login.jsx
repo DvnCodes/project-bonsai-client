@@ -1,5 +1,6 @@
 import React from "react";
 import io from "socket.io-client";
+import { Link } from "@reach/router";
 
 const socket = io("http://localhost", {
   path: "/8080"
@@ -30,10 +31,16 @@ class Login extends React.Component {
             name="password"
             onChange={this.handleInput}
           ></input>
-          <button>log in</button>
+          <Link to="/lobby">
+            <button>log in</button>
+          </Link>
         </form>
       </section>
     );
+    /* / Lobby link - on submit emits a 'player login' message, which the server will
+       listen out for and send a response. When the login is authorised or
+       unauthorised the sever emits back the response. The user is then
+       linked to the Lobby page, depending on the server response.*/
   }
   handleInput = event => {
     const { value, name } = event.target;
@@ -41,15 +48,13 @@ class Login extends React.Component {
   };
 
   handleSubmit = event => {
+    const { username } = this.state;
     console.log("submit");
-    const { playerLogin } = this.props;
     event.preventDefault();
-    playerLogin(); //sets state of App state loggedIn to true.
-    socket.emit("newPlayerInLobby", players => {
-      // send emit saying new player. receive list of current players in lobby from server. Set state with players in lobby.
-      //playersInLobby(players)
-    });
 
+    socket.emit("playerLogin", username);
+    // send emit saying new player. receive list of current players in lobby from server. Set state with players in lobby.
+    //playersInLobby(players)
     this.setState({ username: "", password: "" });
   };
 }
