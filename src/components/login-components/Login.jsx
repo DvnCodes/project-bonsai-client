@@ -1,15 +1,14 @@
 import React from "react";
-import io from "socket.io-client";
 import { Link } from "@reach/router";
-import socketIOClient from "socket.io-client";
-const socket = socketIOClient("localhost:8084");
 
 class Login extends React.Component {
   state = {
     loggedIn: false,
     username: "",
-    password: ""
+    password: "",
+    userList: null
   };
+
   render() {
     const { username, password } = this.state;
     return (
@@ -48,6 +47,7 @@ class Login extends React.Component {
        unauthorised the sever emits back the response. The user is then
        linked to the Lobby page, depending on the server response.*/
   }
+
   handleInput = event => {
     const { value, name } = event.target;
     this.setState({ [name]: value });
@@ -58,16 +58,20 @@ class Login extends React.Component {
     console.log("submitform");
     event.preventDefault();
 
-    socket.emit("playerLogin", username);
+    this.props.socket.emit("playerLogin", username);
     // send emit saying new player. receive list of current players in lobby from server. Set state with players in lobby.
     //playersInLobby(players)
     this.setState({ username: "", password: "" });
   };
 
   componentDidMount() {
-    socket.on("loginAuthorised", authorized => {
-      console.log("WE MANAGED TOO LOGIN");
+    this.props.socket.on("loginAuthorised", authorized => {
       this.setState({ loggedIn: authorized });
+    });
+    this.props.socket.on("currentLobbyGuests", userList => {
+      this.setState({ userList });
+      console.log(Object.keys(userList));
+      console.log(userList[this.props.socket.id].username);
     });
   }
 }
