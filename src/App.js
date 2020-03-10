@@ -4,31 +4,37 @@ import QuizPage from "./components/Quiz-components/QuizPage";
 import { Router } from "@reach/router";
 import Header from "./components/Header-components/Header";
 import Login from "./components/login-components/Login";
+import Lobby from "./components/Lobby-components/Lobby";
+import io from "socket.io-client";
+const socket = io("http://localhost", {
+  path: "/8080"
+});
 
 class App extends React.Component {
   state = { loggedIn: false };
+
+  componentDidMount() {
+    socket.on("loginAuthorised", authorized => {
+      authorized && this.setState({ loggedIn: true });
+    });
+  }
+
   render() {
-    const { loggedIn } = this.state;
     return (
       <div className="App">
         <header className="App-header">
           <Header />
         </header>
         <body>
-          {!loggedIn && <Login playerLogin={this.playerLogin} path="/login" />}
-          {loggedIn && (
-            <Router>
-              <Lobby path="/lobby" />
-              <QuizPage path="/path" />
-            </Router>
-          )}
+          <Router>
+            <Login path="/" />
+            <Lobby path="/lobby" />
+            <QuizPage path="/quiz" />
+          </Router>
         </body>
       </div>
     );
   }
-  playerLogin = () => {
-    this.setState({ loggedIn: true });
-  };
 }
 
 export default App;
