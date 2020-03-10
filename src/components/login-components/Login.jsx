@@ -1,5 +1,9 @@
 import React from "react";
+import io from "socket.io-client";
 
+const socket = io("http://localhost", {
+  path: "/8080"
+});
 class Login extends React.Component {
   state = {
     username: "",
@@ -33,14 +37,19 @@ class Login extends React.Component {
   }
   handleInput = event => {
     const { value, name } = event.target;
-    console.log(value, name);
     this.setState({ [name]: value });
   };
+
   handleSubmit = event => {
     console.log("submit");
-    const { changeTest } = this.props;
+    const { playerLogin } = this.props;
     event.preventDefault();
-    changeTest();
+    playerLogin(); //sets state of App state loggedIn to true.
+    socket.emit("newPlayerInLobby", players => {
+      // send emit saying new player. receive list of current players in lobby from server. Set state with players in lobby.
+      //playersInLobby(players)
+    });
+
     this.setState({ username: "", password: "" });
   };
 }
