@@ -1,7 +1,9 @@
 import React, { Component } from "react";
+import Timer from "../Quiz-components/Timer";
+import { redirectTo } from "@reach/router";
 
 class Lobby extends Component {
-  state = { playersReady: 0 };
+  state = { playersReady: 0, startQuizTimer: false };
 
   //listens for new lobby additions
   componentDidMount() {
@@ -30,6 +32,14 @@ class Lobby extends Component {
               })}
             </ul>
             <button onClick={this.handleReady}>Ready!</button>
+
+            {//check if quiz timer has been set to start by handleReady Func
+            this.state.startQuizTimer && (
+              <>
+                <p>Quiz starting in: </p>
+                <Timer seconds="5" timeUp={this.startQuiz} />
+              </>
+            )}
           </>
         )}
       </div>
@@ -44,10 +54,17 @@ class Lobby extends Component {
       Object.keys(this.props.userList).length
     ) {
       console.log("start quiz");
+      this.setState({ startQuizTimer: true });
     }
     this.setState(currentState => {
       return { playersReady: currentState.playersReady + 1 };
     });
+  };
+
+  startQuiz = () => {
+    console.log("start quix here");
+    // trying to get the quiz page to render
+    // redirectTo("/login");
   };
 }
 
