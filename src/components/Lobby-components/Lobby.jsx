@@ -1,25 +1,37 @@
 import React, { Component } from "react";
 
 class Lobby extends Component {
-  state = { users: null, loading: true };
+  componentDidMount() {
+    console.log(Object.keys(this.props.userList));
+  }
+
   render() {
     return (
       <div>
-        <h1>Quiz Lobby</h1>
-        {this.state.loading === false ? (
-          <ul>
-            {Object.keys(this.state.users).map(userObj => {
-              console.log("here");
-              return <li>{userObj[this.props.socket.id]}</li>;
-            })}
-          </ul>
+        <h1>Lobby</h1>
+        {!this.props.userList ? (
+          <p>Loading players...</p>
         ) : (
-          <p>Loading...</p>
+          <>
+            <p>Online Players:</p>
+            <ul>
+              {Object.keys(this.props.userList).map(userSocketID => {
+                return (
+                  <li key={userSocketID}>
+                    {this.props.userList[userSocketID].username}
+                  </li>
+                );
+              })}
+            </ul>
+          </>
         )}
       </div>
     );
   }
-  setUsers = () => {};
+
+  // setUsers = userList => {
+  //   this.setState({ userList });
+  // };
 }
 
 export default Lobby;

@@ -9,7 +9,7 @@ import socketIOClient from "socket.io-client";
 const socket = socketIOClient("localhost:8080");
 
 class App extends React.Component {
-  state = { loggedIn: false, users: null };
+  state = { loggedIn: false, userList: null };
 
   componentDidMount() {}
 
@@ -21,8 +21,12 @@ class App extends React.Component {
         </header>
         <body>
           <Router>
-            <Login path="/" socket={socket} />
-            <Lobby path="/lobby" setUsers={this.setUsers} socket={socket} />
+            <Login path="/" socket={socket} setUserList={this.setUserList} />
+            <Lobby
+              path="/lobby"
+              userList={this.state.userList}
+              socket={socket}
+            />
             <QuizPage path="/quiz" users={this.state.users} socket={socket} />
           </Router>
         </body>
@@ -30,8 +34,10 @@ class App extends React.Component {
     );
   }
 
-  setUsers = users => {
-    this.setState({ users });
+  setUserList = userList => {
+    console.log("setting userlist");
+
+    this.setState({ userList });
   };
 }
 
