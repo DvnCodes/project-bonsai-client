@@ -1,12 +1,12 @@
 import React from "react";
 import io from "socket.io-client";
 import { Link } from "@reach/router";
+import socketIOClient from "socket.io-client";
+const socket = socketIOClient("localhost:8084");
 
-const socket = io("http://localhost", {
-  path: "/8080"
-});
 class Login extends React.Component {
   state = {
+    loggedIn: false,
     username: "",
     password: ""
   };
@@ -14,27 +14,33 @@ class Login extends React.Component {
     const { username, password } = this.state;
     return (
       <section>
-        <form onSubmit={this.handleSubmit}>
-          <input
-            className="login-name-input"
-            type="text"
-            placeholder="enter username"
-            value={username}
-            name="username"
-            onChange={this.handleInput}
-          ></input>
-          <input
-            className="login-password-input"
-            type="password"
-            placeholder="enter password"
-            value={password}
-            name="password"
-            onChange={this.handleInput}
-          ></input>
-          <Link to="/lobby">
+        {this.state.loggedIn === false && (
+          <form onSubmit={this.handleSubmit}>
+            <input
+              className="login-name-input"
+              type="text"
+              placeholder="enter username"
+              value={username}
+              name="username"
+              onChange={this.handleInput}
+            ></input>
+            <input
+              className="login-password-input"
+              type="password"
+              placeholder="enter password"
+              value={password}
+              name="password"
+              onChange={this.handleInput}
+            ></input>
+
             <button>log in</button>
+          </form>
+        )}
+        {this.state.loggedIn === true && (
+          <Link to="/lobby">
+            <button>JOIN LOBBY</button>{" "}
           </Link>
-        </form>
+        )}
       </section>
     );
     /* / Lobby link - on submit emits a 'player login' message, which the server will
@@ -49,7 +55,7 @@ class Login extends React.Component {
 
   handleSubmit = event => {
     const { username } = this.state;
-    console.log("submit");
+    console.log("submitform");
     event.preventDefault();
 
     socket.emit("playerLogin", username);
@@ -57,6 +63,13 @@ class Login extends React.Component {
     //playersInLobby(players)
     this.setState({ username: "", password: "" });
   };
+
+  componentDidMount() {
+    socket.on("loginAuthorised", authorized => {
+      console.log("WE MANAGED TOO LOGIN");
+      this.setState({ loggedIn: authorized });
+    });
+  }
 }
 
 // new user button, rendering a create account component?

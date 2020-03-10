@@ -13,11 +13,7 @@ const socket = io("http://localhost", {
 class App extends React.Component {
   state = { loggedIn: false };
 
-  componentDidMount() {
-    socket.on("loginAuthorised", authorized => {
-      authorized && this.setState({ loggedIn: true });
-    });
-  }
+  componentDidMount() {}
 
   render() {
     return (

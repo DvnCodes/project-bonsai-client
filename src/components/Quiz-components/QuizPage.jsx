@@ -20,7 +20,7 @@ class QuizPage extends Component {
   };
 
   componentDidMount() {
-    const socket = socketIOClient("localhost:8080");
+    const socket = socketIOClient("localhost:8084");
     socket.on("beginQuiz", data => {
       this.setState({ questions: data.quizQuestions });
     });
