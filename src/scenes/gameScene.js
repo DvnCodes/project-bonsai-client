@@ -32,6 +32,8 @@ function preload() {
 
 function create() {
   socket.emit("gameLoaded", socket.id);
+
+
   const self = this;
   this.socket = socket;
   this.players = this.add.group();
@@ -39,14 +41,13 @@ function create() {
   this.stats = this.add.group();
   this.something = this.add.group();
   dolly = this.physics.add.image(100, 100, "star");
-  this.cameras.main.setDeadzone(50, 50);
-  this.cameras.main.startFollow(dolly, true, 0.05, 0.05);
-  this.cameras.main.setZoom(1.6);
+  this.cameras.main.setDeadzone(10, 10);
+  this.cameras.main.startFollow(dolly, true, 0.3, 0.3);
+  this.cameras.main.setZoom(1);
 
   this.socket.on("currentPlayers", players => {
     Object.keys(players).forEach(id => {
       console.log(id);
-
       if (players[id].playerID === self.socket.id) {
         displayPlayers(self, players[id], "genie");
       } else {
@@ -79,8 +80,6 @@ function create() {
   });
 
   this.socket.on("somethingAdded", somethingInfo => {
-    console.log(socket.id);
-    console.log("thingthing", somethingInfo.thing);
     showSomething(self, somethingInfo.player, somethingInfo.thing);
   });
 
