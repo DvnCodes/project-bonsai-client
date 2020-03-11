@@ -55,6 +55,7 @@ class Lobby extends Component {
   }
   componentDidMount() {
     //guests joining and leaving lobby messages
+
     this.props.socket.emit("joinedLobby", "hi");
     this.props.socket.on("currentLobbyGuests", lobbyGuests => {
       console.log("userlist", lobbyGuests);
