@@ -8,7 +8,7 @@ class Login extends React.Component {
     password: ""
   };
   render() {
-    const { username, password } = this.state;
+    const { username } = this.state;
     return (
       <section>
         {this.state.loggedIn === false && (
@@ -21,22 +21,25 @@ class Login extends React.Component {
               name="username"
               onChange={this.handleInput}
             ></input>
-            <input
+            {/* <input
               className="login-password-input"
               type="password"
               placeholder="enter password"
               value={password}
               name="password"
               onChange={this.handleInput}
-            ></input>
+            ></input> */}
 
             <button>log in</button>
           </form>
         )}
         {this.state.loggedIn === true && (
-          <Link to="/lobby">
-            <button>JOIN LOBBY</button>{" "}
-          </Link>
+          <>
+            <p> Login Authorised..</p>
+            <Link to="/lobby">
+              <button>JOIN LOBBY</button>{" "}
+            </Link>
+          </>
         )}
       </section>
     );

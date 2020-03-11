@@ -1,16 +1,19 @@
 import React, { Component } from "react";
-import { Link } from "@reach/router";
+import { Link, Redirect } from "@reach/router";
 
 class Lobby extends Component {
   state = {
     everyoneReady: false,
     chat: [],
-    chatInput: ""
+    chatInput: "",
+    currentLobbyGuests: []
   };
   render() {
     return (
       <div>
+        {this.state.everyoneReady === true && <Redirect noThrow to="/quiz" />}
         <h1>Quiz Lobby</h1>
+        {console.log("lobbyGUESTS", this.state.currentLobbyGuests)}
         {this.state.everyoneReady === false && (
           <button onClick={this.readyUp}>READY</button>
         )}
@@ -19,7 +22,20 @@ class Lobby extends Component {
             <button>START QUIZ! HURRY TIMES TICKING</button>{" "}
           </Link>
         )}
+        <div>
+          <h2>Online Players:</h2>
+          <ul>
+            {this.state.currentLobbyGuests.map(guest => {
+              return (
+                <li>
+                  {guest.username} {guest.ready}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
         <ul>
+          <h2> CHAT</h2>
           {this.state.chat.map(comment => {
             return (
               <li>
@@ -41,12 +57,12 @@ class Lobby extends Component {
   }
   componentDidMount() {
     this.props.socket.emit("joinedLobby", "hi");
-    this.props.socket.on("currentLobbyGuests", userList => {
-      console.log("userList", userList);
-    });
-    this.props.socket.on("chatUpdate", chatArray => {
-      console.log("UPDATE", chatArray);
-      this.setState({ chat: chatArray });
+    this.props.socket.on("currentLobbyData", lobbyData => {
+      console.log("userlist", lobbyData);
+      this.setState({
+        currentLobbyGuests: lobbyData.users,
+        chat: lobbyData.messages
+      });
     });
     this.props.socket.on("startGame", lobbyData => {
       console.log("EVERYONES READY");
