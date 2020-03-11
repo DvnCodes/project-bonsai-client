@@ -5,15 +5,12 @@ class Login extends React.Component {
   state = {
     loggedIn: false,
     username: "",
-    // password: "",
-    userList: null
+    password: ""
   };
-
   render() {
-    const { username /*password*/ } = this.state;
+    const { username } = this.state;
     return (
-      <section className="login">
-        <h1>Login</h1>
+      <section>
         {this.state.loggedIn === false && (
           <form onSubmit={this.handleSubmit}>
             <input
@@ -32,14 +29,15 @@ class Login extends React.Component {
               name="password"
               onChange={this.handleInput}
             ></input> */}
+
             <button>log in</button>
           </form>
         )}
         {this.state.loggedIn === true && (
           <>
-            <p>Login Authorised...</p>
+            <p> Login Authorised..</p>
             <Link to="/lobby">
-              <button>Join Lobby</button>
+              <button>JOIN LOBBY</button>{" "}
             </Link>
           </>
         )}
@@ -47,10 +45,9 @@ class Login extends React.Component {
     );
     /* / Lobby link - on submit emits a 'player login' message, which the server will
        listen out for and send a response. When the login is authorised or
-       unauthorised the server emits back the response. The user is then
+       unauthorised the sever emits back the response. The user is then
        linked to the Lobby page, depending on the server response.*/
   }
-
   handleInput = event => {
     const { value, name } = event.target;
     this.setState({ [name]: value });
@@ -69,12 +66,12 @@ class Login extends React.Component {
 
   componentDidMount() {
     this.props.socket.on("loginAuthorised", authorized => {
+      console.log("WE MANAGED TOO LOGIN");
       this.setState({ loggedIn: authorized });
     });
-    this.props.socket.on("currentLobbyGuests", userList => {
-      this.props.setUserList(userList);
-    });
   }
+
+  componentDidUpdate(prevProps, prevState) {}
 }
 
 // new user button, rendering a create account component?

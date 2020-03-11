@@ -1,70 +1,87 @@
 import React, { Component } from "react";
-import Timer from "../Quiz-components/Timer";
-import { redirectTo } from "@reach/router";
+import { Link, Redirect } from "@reach/router";
 
 class Lobby extends Component {
-  state = { playersReady: 0, startQuizTimer: false };
-
-  //listens for new lobby additions
-  componentDidMount() {
-    this.props.socket.on("newLobbyAddition", newSocketID => {});
-  }
-
+  state = {
+    everyoneReady: false,
+    chat: [],
+    chatInput: "",
+    currentLobbyGuests: []
+  };
   render() {
     return (
       <div>
-        <h1>Lobby</h1>
-        {!this.props.userList ? (
-          <p>Loading players...</p>
-        ) : (
-          <>
-            <p>Online Players:</p>
-            <ul>
-              {
-                //maps over an array of logged in user socket IDs, adds their username to a list item
-              }
-              {Object.keys(this.props.userList).map(userSocketID => {
-                return (
-                  <li key={userSocketID}>
-                    {this.props.userList[userSocketID].username}
-                  </li>
-                );
-              })}
-            </ul>
-            <button onClick={this.handleReady}>Ready!</button>
-
-            {//check if quiz timer has been set to start by handleReady Func
-            this.state.startQuizTimer && (
-              <>
-                <p>Quiz starting in: </p>
-                <Timer seconds="5" timeUp={this.startQuiz} />
-              </>
-            )}
-          </>
+        {this.state.everyoneReady === true && <Redirect noThrow to="/quiz" />}
+        <h1>Quiz Lobby</h1>
+        {console.log("lobbyGUESTS", this.state.currentLobbyGuests)}
+        {this.state.everyoneReady === false && (
+          <button onClick={this.readyUp}>READY</button>
         )}
+        {this.state.everyoneReady === true && (
+          <Link to="/quiz">
+            <button>START QUIZ! HURRY TIMES TICKING</button>{" "}
+          </Link>
+        )}
+        <div>
+          <h2>Online Players:</h2>
+          <ul>
+            {this.state.currentLobbyGuests.map(guest => {
+              return (
+                <li>
+                  {guest.username} {guest.ready}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+        <ul>
+          <h2> CHAT</h2>
+          {this.state.chat.map(comment => {
+            return (
+              <li>
+                {comment.user} {comment.message}
+              </li>
+            );
+          })}
+        </ul>
+        <form onSubmit={this.sendMessage}>
+          <input
+            type="text"
+            onChange={this.handleChange}
+            value={this.state.chatInput}
+          ></input>
+          <button>Send</button>
+        </form>
       </div>
     );
   }
-
-  handleReady = e => {
-    //if the number of players ready to play, is the number of connected users, start quiz
-
-    if (
-      this.state.playersReady + 1 ===
-      Object.keys(this.props.userList).length
-    ) {
-      console.log("start quiz");
-      this.setState({ startQuizTimer: true });
-    }
-    this.setState(currentState => {
-      return { playersReady: currentState.playersReady + 1 };
+  componentDidMount() {
+    this.props.socket.emit("joinedLobby", "hi");
+    this.props.socket.on("currentLobbyData", lobbyData => {
+      console.log("userlist", lobbyData);
+      this.setState({
+        currentLobbyGuests: lobbyData.users,
+        chat: lobbyData.messages
+      });
     });
-  };
+    this.props.socket.on("startGame", lobbyData => {
+      console.log("EVERYONES READY");
+      this.setState({ everyoneReady: true });
+    });
+  }
 
-  startQuiz = () => {
-    console.log("start quix here");
-    // trying to get the quiz page to render
-    // redirectTo("/login");
+  readyUp = () => {
+    this.props.socket.emit("ready for the quiz", "ready");
+  };
+  handleChange = event => {
+    const { value } = event.target;
+    this.setState({ chatInput: value });
+  };
+  sendMessage = event => {
+    event.preventDefault();
+
+    this.props.socket.emit("newMessage", this.state.chatInput);
+    this.setState({ chatInput: "" });
   };
 }
 
