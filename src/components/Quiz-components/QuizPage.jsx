@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Timer from "./Timer";
 import QuizResultPage from "./QuizResultPage";
-import socketIOClient from "socket.io-client";
 
 class QuizPage extends Component {
   state = {
@@ -20,12 +19,13 @@ class QuizPage extends Component {
   };
 
   componentDidMount() {
-    const socket = socketIOClient("localhost:8080");
-    socket.on("beginQuiz", data => {
-      this.setState({ questions: data.quizQuestions });
+    this.props.socket.emit("sendQuizQuestions");
+
+    this.props.socket.on("beginQuiz", data => {
+      console.log("REIEVED DATA", data);
+      this.setState({ questions: data });
     });
   }
-
   render() {
     const { questions, currentQuestion } = this.state;
     let answers;
@@ -47,30 +47,34 @@ class QuizPage extends Component {
     return (
       <div>
         <h1>Quiz</h1>
-        {!this.state.quizOver ? (
-          <Timer seconds={5} timeUp={this.quizOver} />
-        ) : (
+        {this.state.questions.length > 0 && (
           <>
-            <h2>Game Starting in:</h2>
-            <Timer seconds={10} timeUp={this.startGame} />
-          </>
-        )}
-        {this.state.answeredAll ? (
-          <QuizResultPage score={this.state.score} />
-        ) : (
-          <>
-            <p>Score: {this.state.score}</p>
+            {!this.state.quizOver ? (
+              <Timer seconds={5} timeUp={this.quizOver} />
+            ) : (
+              <>
+                <h2>Game Starting in:</h2>
+                <Timer seconds={10} timeUp={this.startGame} />
+              </>
+            )}
+            {this.state.answeredAll ? (
+              <QuizResultPage score={this.state.score} />
+            ) : (
+              <>
+                <p>Score: {this.state.score}</p>
 
-            <h2>{questions[currentQuestion].q} = ?</h2>
-            <ul>
-              {answers.map((answer, i) => {
-                return (
-                  <li key={i}>
-                    <button onClick={this.handleAnswer}>{answer}</button>
-                  </li>
-                );
-              })}
-            </ul>
+                <h2>{questions[currentQuestion].q} = ?</h2>
+                <ul>
+                  {answers.map((answer, i) => {
+                    return (
+                      <li key={i}>
+                        <button onClick={this.handleAnswer}>{answer}</button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </>
+            )}
           </>
         )}
       </div>

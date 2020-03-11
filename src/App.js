@@ -5,19 +5,12 @@ import { Router } from "@reach/router";
 import Header from "./components/Header-components/Header";
 import Login from "./components/login-components/Login";
 import Lobby from "./components/Lobby-components/Lobby";
-import io from "socket.io-client";
-const socket = io("http://localhost", {
-  path: "/8080"
-});
+import socketIOClient from "socket.io-client";
+import Gamepage from "./components/Gamepage-components/Gamepage";
+const socket = socketIOClient("localhost:8084");
 
 class App extends React.Component {
-  state = { loggedIn: false };
-
-  componentDidMount() {
-    socket.on("loginAuthorised", authorized => {
-      authorized && this.setState({ loggedIn: true });
-    });
-  }
+  state = { loggedIn: false, socket: null };
 
   render() {
     return (
@@ -25,16 +18,17 @@ class App extends React.Component {
         <header className="App-header">
           <Header />
         </header>
-        <body>
-          <Router>
-            <Login path="/" />
-            <Lobby path="/lobby" />
-            <QuizPage path="/quiz" />
-          </Router>
-        </body>
+
+        <Router>
+          <Login path="/" socket={socket} />
+          <Lobby path="/lobby" socket={socket} />
+          <QuizPage path="/quiz" socket={socket} />
+          <Gamepage path="/game" socket={socket} />
+        </Router>
       </div>
     );
   }
+  componentDidMount() {}
 }
 
 export default App;

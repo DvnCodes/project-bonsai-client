@@ -1,9 +1,22 @@
-.correctAnswer {
-  background-color: green;
-}
+/* font-family: 'Cinzel', serif;
+font-family: 'Press Start 2P', cursive;
+font-family: 'Rock Salt', cursive; */
 
 body {
-  background-color: grey;
-  margin: 50px;
+  background-color: gray;
+  margin: 0px;
   text-align: center;
+  font-family: "Press Start 2P", cursive;
+}
+
+header {
+  color: beige;
+  background-color: sienna;
+  margin: 0;
+  padding: 10px;
+  font-size: 1.5em;
+}
+
+h1 {
+  margin: 0;
 }
