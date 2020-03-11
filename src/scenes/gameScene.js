@@ -270,16 +270,10 @@ function displayAttacks(self, playerInfo) {
 
 function displayLife(self, player) {
   const myLife = self.add
-    .sprite(player.x, player.y + 100, "red")
-    .setDisplaySize(25, 25);
+    .sprite(player.x, player.y + 80, "green")
+    .setDisplaySize(player.life * 10, 10);
   myLife.statID = player.playerID;
   self.stats.add(myLife);
-  const myCurrentLife = self.add
-    .image(player.x, player.y + 100, "green")
-    .setDisplaySize(25, 25);
-  myCurrentLife.statID = player.playerID + 1;
-  myCurrentLife.scaleX = player.life / 3;
-  self.stats.add(myCurrentLife);
 }
 
 function showSomething(self, player, sprite) {
