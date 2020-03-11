@@ -9,7 +9,7 @@ body {
   font-family: "Press Start 2P", cursive;
 }
 
-header {
+.header {
   color: beige;
   background-color: sienna;
   margin: 0;
@@ -17,6 +17,7 @@ header {
   font-size: 1.5em;
 }
 
-h1 {
+
+.header h1 {
   margin: 0;
 }

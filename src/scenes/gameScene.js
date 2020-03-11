@@ -1,7 +1,11 @@
 import Phaser from "phaser";
 import socketIOClient from "socket.io-client";
 
-const config = {
+const passSocketRef = socket => {
+  clientSocket = socket;
+};
+
+const gameSceneConfig = {
   type: Phaser.AUTO,
   parent: "phaser-example",
   width: 800,
@@ -20,29 +24,34 @@ const config = {
   }
 };
 
-// const socket = socketIOClient("localhost:8080");
-// const game = new Phaser.Game(config);
 let dolly;
 let life = undefined;
+let spacebar;
+let qu;
+let wu;
+let ee;
+let clientSocket;
+
 function preload() {
-  console.log("preloading");
-  // this.load.image("genie", "../assets/10.png");
-  // this.load.image("baddie", "../assets/13.png");
-  // this.load.image("star", "../assets/star.png");
-  // this.load.image("tiles", "../assets/rogue.png");
-  // this.load.tilemapTiledJSON("map", "../assets/mapTest.json");
-  // this.load.image("fireball", "../assets/spell.png");
-  // this.load.image("life2", "../assets/2.png");
-  // this.load.image("life1", "../assets/1.png");
-  // // this.load.image("life0", "../assets/0.png");
-  // this.load.image("life3", "../assets/3.png");
-  // this.load.image("firering", "../assets/firering.png");
+  this.load.image("genie", "assets/10.png");
+  this.load.image("baddie", "assets/13.png");
+  this.load.image("star", "assets/star.png");
+  this.load.image("tiles", "assets/rogue.png");
+  this.load.tilemapTiledJSON("map", "assets/mapTest.json");
+  this.load.image("fireball", "assets/spell.png");
+  this.load.image("life2", "assets/2.png");
+  this.load.image("life1", "assets/1.png");
+  // this.load.image("life0", "assets/0.png");
+  this.load.image("life3", "assets/3.png");
+  this.load.image("firering", "assets/firering.png");
+  this.load.image("dead", "assets/bomb.png");
+  this.load.image("green", "assets/green.png");
+  this.load.image("red", "assets/red.png");
 }
 
 function create() {
-  console.log("creating");
   const self = this;
-  this.socket = socketIOClient("localhost:8084");
+  this.socket = socketIOClient("localhost:8080");
   this.players = this.add.group();
   this.attacks = this.add.group();
   this.stats = this.add.group();
@@ -73,6 +82,14 @@ function create() {
     self.players.getChildren().forEach(player => {
       if (playerID === player.playerID) {
         player.destroy();
+      }
+    });
+  });
+
+  this.socket.on("attackEnded", attackID => {
+    self.attacks.getChildren().forEach(attack => {
+      if (attackID === attack.attackID) {
+        attack.destroy();
       }
     });
   });
@@ -160,13 +177,20 @@ function create() {
     });
   });
 
+  this.socket.on("onDie", playerID => {
+    self.players.getChildren().forEach(player => {
+      if (player.playerID === playerID) {
+        self.add.image(player.x, player.y, "dead");
+        player.setTexture("star");
+      }
+    });
+  });
+
   this.cursors = this.input.keyboard.createCursorKeys();
-  let spacebar = this.input.keyboard.addKey(
-    Phaser.Input.Keyboard.KeyCodes.SPACE
-  );
-  let q = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
-  let w = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-  let e = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+  spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+  qu = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
+  wu = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+  ee = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
   this.leftKeyPressed = false;
   this.rightKeyPressed = false;
   this.upKeyPressed = false;
@@ -221,15 +245,15 @@ function update() {
     });
   }
   // if (this.cursors.space.JustDown) {
-  if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
+  if (Phaser.Input.Keyboard.JustDown(spacebar)) {
     console.log("SHOOTING!!!");
     this.socket.emit("attackInput", "hi");
   }
-  if (Phaser.Input.Keyboard.JustDown(this.q)) {
+  if (Phaser.Input.Keyboard.JustDown(qu)) {
     console.log("SHOOTING!!!");
     this.socket.emit("attackInput", "hi");
   }
-  if (Phaser.Input.Keyboard.JustDown(this.w)) {
+  if (Phaser.Input.Keyboard.JustDown(wu)) {
     console.log("something!!!");
     this.socket.emit("something", "firering");
   }
@@ -261,10 +285,16 @@ function displayAttacks(self, playerInfo) {
 
 function displayLife(self, player) {
   const myLife = self.add
-    .sprite(player.x, player.y + 100, `life${player.life}`)
+    .sprite(player.x, player.y + 100, "red")
     .setDisplaySize(25, 25);
   myLife.statID = player.playerID;
   self.stats.add(myLife);
+  const myCurrentLife = self.add
+    .image(player.x, player.y + 100, "green")
+    .setDisplaySize(25, 25);
+  myCurrentLife.statID = player.playerID + 1;
+  myCurrentLife.scaleX = player.life / 3;
+  self.stats.add(myCurrentLife);
 }
 
 function showSomething(self, player, sprite) {
@@ -275,4 +305,4 @@ function showSomething(self, player, sprite) {
   self.something.add(mySomething);
 }
 
-export { config };
+export { gameSceneConfig, passSocketRef };

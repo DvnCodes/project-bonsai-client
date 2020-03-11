@@ -62,7 +62,6 @@ class QuizPage extends Component {
             ) : (
               <>
                 <p>Score: {this.state.score}</p>
-
                 <h2>{questions[currentQuestion].q} = ?</h2>
                 <ul>
                   {answers.map((answer, i) => {
@@ -80,10 +79,8 @@ class QuizPage extends Component {
       </div>
     );
   }
-
   handleAnswer = e => {
     const { questions, currentQuestion } = this.state;
-
     if (e.target.innerText === questions[currentQuestion].correctA) {
       this.setState(currentState => {
         const nextQuestion = currentState.currentQuestion + 1;
@@ -100,7 +97,6 @@ class QuizPage extends Component {
       return this.answeredAll();
     }
   };
-
   answeredAll = () => {
     this.setState({ answeredAll: true });
   };
@@ -111,5 +107,4 @@ class QuizPage extends Component {
     console.log("START GAME");
   };
 }
-
 export default QuizPage;
