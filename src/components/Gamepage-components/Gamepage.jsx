@@ -7,7 +7,7 @@ class Gamepage extends Component {
     initialize: true,
     game: gameSceneConfig,
     endpoint: "localhost:8084",
-    socket: null
+    socket: this.props.socket
   };
   render() {
     return (
