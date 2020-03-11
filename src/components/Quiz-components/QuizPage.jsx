@@ -95,7 +95,7 @@ class QuizPage extends Component {
     }
     if (
       parseInt(e.target.innerText) !== questions[currentQuestion].correctA &&
-      this.state.score > 0
+      this.state.score > 1
     ) {
       this.setState(currentState => {
         const nextQuestion = currentState.currentQuestion + 1;
