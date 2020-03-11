@@ -15,8 +15,8 @@ class Lobby extends Component {
           <button onClick={this.readyUp}>READY</button>
         )}
         {this.state.everyoneReady === true && (
-          <Link to="/game">
-            <button>START GAME! HURRY TIMES TICKING</button>{" "}
+          <Link to="/quiz">
+            <button>START QUIZ! HURRY TIMES TICKING</button>{" "}
           </Link>
         )}
         <ul>
