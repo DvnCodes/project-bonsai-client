@@ -56,6 +56,7 @@ class Lobby extends Component {
     );
   }
   componentDidMount() {
+    console.log(this.props.socket.id);
     this.props.socket.emit("joinedLobby", "hi");
     this.props.socket.on("currentLobbyData", lobbyData => {
       console.log("userlist", lobbyData);

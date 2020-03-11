@@ -5,25 +5,6 @@ import Phaser from "phaser";
 // };
 import { socket } from "../App";
 
-const gameSceneConfig = {
-  type: Phaser.AUTO,
-  parent: "phaser-example",
-  width: 800,
-  height: 600,
-  physics: {
-    default: "arcade",
-    arcade: {
-      debug: false,
-      gravity: { y: 0 }
-    }
-  },
-  scene: {
-    preload,
-    create,
-    update
-  }
-};
-
 let dolly;
 let life = undefined;
 let spacebar;
@@ -32,6 +13,7 @@ let wu;
 let ee;
 
 function preload() {
+  console.log(socket.id);
   this.load.image("genie", "assets/10.png");
   this.load.image("baddie", "assets/13.png");
   this.load.image("star", "assets/star.png");
@@ -49,6 +31,7 @@ function preload() {
 }
 
 function create() {
+  socket.emit("gameLoaded", socket.id);
   const self = this;
   this.socket = socket;
   this.players = this.add.group();
@@ -96,6 +79,7 @@ function create() {
   });
 
   this.socket.on("somethingAdded", somethingInfo => {
+    console.log(socket.id);
     console.log("thingthing", somethingInfo.thing);
     showSomething(self, somethingInfo.player, somethingInfo.thing);
   });
@@ -305,5 +289,24 @@ function showSomething(self, player, sprite) {
   mySomething.somethingID = player.playerID;
   self.something.add(mySomething);
 }
+
+const gameSceneConfig = {
+  type: Phaser.AUTO,
+  parent: "phaser-example",
+  width: 800,
+  height: 600,
+  physics: {
+    default: "arcade",
+    arcade: {
+      debug: false,
+      gravity: { y: 0 }
+    }
+  },
+  scene: {
+    preload,
+    create,
+    update
+  }
+};
 
 export { gameSceneConfig };
