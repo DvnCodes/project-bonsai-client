@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Timer from "./Timer";
 import QuizResultPage from "./QuizResultPage";
+import { Redirect } from "@reach/router";
 
 class QuizPage extends Component {
   state = {
@@ -22,7 +23,6 @@ class QuizPage extends Component {
     this.props.socket.emit("sendQuizQuestions");
 
     this.props.socket.on("beginQuiz", data => {
-      console.log("REIEVED DATA", data);
       this.setState({ questions: data });
     });
   }
@@ -47,6 +47,7 @@ class QuizPage extends Component {
     return (
       <div>
         <h1>Quiz</h1>
+        {this.state.quizOver && <Redirect noThrow to="/game" />}
         {this.state.questions.length > 0 && (
           <>
             {!this.state.quizOver ? (
@@ -102,6 +103,8 @@ class QuizPage extends Component {
   };
   quizOver = () => {
     this.setState({ quizOver: true, answeredAll: true });
+    console.log("quiz over");
+    this.props.socket.emit("clientGameReady");
   };
   startGame = () => {
     console.log("START GAME");

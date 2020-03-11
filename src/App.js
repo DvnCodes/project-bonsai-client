@@ -9,14 +9,12 @@ import socketIOClient from "socket.io-client";
 import Gamepage from "./components/Gamepage-components/Gamepage";
 const socket = socketIOClient("localhost:8084");
 
-
-
 class App extends React.Component {
-  state = { loggedIn: false, socket: null };
+  state = { loggedIn: false };
   render() {
     return (
       <div className="App">
-          <Header />
+        <Header />
         <Router>
           <Login path="/" socket={socket} />
           <Lobby path="/lobby" socket={socket} />
@@ -28,4 +26,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export { App, socket };
