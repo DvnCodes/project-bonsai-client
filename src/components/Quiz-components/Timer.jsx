@@ -15,7 +15,7 @@ class Timer extends Component {
 
   componentDidMount() {
     this.setState({ currentCount: this.props.seconds });
-    this.intervalId = setInterval(this.timer.bind(this), 1000);
+    this.intervalId = setInterval(this.timer.bind(this), 100);
   }
   componentWillUnmount() {
     clearInterval(this.intervalId);

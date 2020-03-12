@@ -6,7 +6,7 @@ class Gamepage extends Component {
   state = {
     initialize: true,
     game: gameSceneConfig,
-    endpoint: "localhost:8084",
+    endpoint: "https://projects-game-backend.herokuapp.com/",
     socket: this.props.socket
   };
   render() {
