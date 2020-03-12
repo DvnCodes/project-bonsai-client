@@ -64,8 +64,11 @@ class Login extends React.Component {
   };
 
   componentDidMount() {
-    this.props.socket.on("loginAuthorised", authorized => {
-      this.setState({ loggedIn: authorized });
+    this.props.socket.on("loginAuthorised", updatedClientDetails => {
+      console.log(updatedClientDetails);
+      this.setState({ loggedIn: updatedClientDetails.loggedIn }, () => {
+        this.props.updateClientDetails(updatedClientDetails);
+      });
     });
   }
 

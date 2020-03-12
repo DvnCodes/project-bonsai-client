@@ -10,7 +10,9 @@ class Lobby extends Component {
   };
   render() {
     console.log(this.state.currentLobbyGuests);
-    return (
+    return !this.props.currentState.loggedIn ? (
+      <Redirect noThrow to="/" />
+    ) : (
       <div>
         {this.state.everyoneReady === true && <Redirect noThrow to="/quiz" />}
         <h1>Quiz Lobby</h1>
@@ -55,9 +57,9 @@ class Lobby extends Component {
   }
   componentDidMount() {
     //guests joining and leaving lobby messages
-
     this.props.socket.emit("joinedLobby", "hi");
     this.props.socket.on("currentLobbyGuests", lobbyGuests => {
+      console.log("does this trigger?");
       console.log("userlist", lobbyGuests);
       this.setState({
         currentLobbyGuests: lobbyGuests
@@ -71,6 +73,9 @@ class Lobby extends Component {
           currentLobbyGuests: updatedLobbyGuestList
         };
       });
+    });
+    this.props.socket.on("updateClientDetails", updatedClientDetails => {
+      this.props.updateClientDetails(updatedClientDetails);
     });
 
     //lobby guests sending and receiving messages
