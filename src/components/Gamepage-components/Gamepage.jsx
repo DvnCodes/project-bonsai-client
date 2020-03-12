@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { IonPhaser } from "@ion-phaser/react";
 import { gameSceneConfig } from "../../scenes/gameScene";
+import { Redirect } from "@reach/router";
 
 class Gamepage extends Component {
   state = {
@@ -10,9 +11,12 @@ class Gamepage extends Component {
     socket: this.props.socket
   };
   render() {
-    return (
+    return !this.props.currentState.loggedIn ? (
+      <Redirect noThrow to="/" />
+    ) : (
       <div>
         <h1>GAMEPAGE</h1>
+        <div id="test"></div>
         <IonPhaser game={this.state.game} initialize={this.state.initialize} />
       </div>
     );

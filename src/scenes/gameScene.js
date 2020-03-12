@@ -33,7 +33,6 @@ function preload() {
 function create() {
   socket.emit("gameLoaded", socket.id);
 
-
   const self = this;
   this.socket = socket;
   this.players = this.add.group();
@@ -78,7 +77,6 @@ function create() {
       }
     });
   });
-
 
   this.socket.on("spellAdded", spellInfo => {
     console.log(socket.id);
@@ -275,7 +273,7 @@ function showspell(self, player, sprite) {
 
 const gameSceneConfig = {
   type: Phaser.AUTO,
-  parent: "phaser-example",
+  parent: "test",
   width: 800,
   height: 600,
   physics: {

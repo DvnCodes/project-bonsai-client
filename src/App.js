@@ -11,16 +11,41 @@ import Gamepage from "./components/Gamepage-components/Gamepage";
 const socket = socketIOClient("localhost:8080");
 
 class App extends React.Component {
-  state = { loggedIn: false };
+  state = { clientDetails: { loggedIn: false } };
+
+  updateClientDetails = clientDetailsFromServer => {
+    this.setState({ clientDetails: clientDetailsFromServer });
+  };
+
   render() {
     return (
       <div className="App">
         <Header />
         <Router>
-          <Login path="/" socket={socket} />
-          <Lobby path="/lobby" socket={socket} />
-          <QuizPage path="/quiz" socket={socket} />
-          <Gamepage path="/game" socket={socket} />
+          <Login
+            path="/"
+            socket={socket}
+            updateClientDetails={this.updateClientDetails}
+            currentState={this.state.clientDetails}
+          />
+          <Lobby
+            path="/lobby"
+            socket={socket}
+            updateClientDetails={this.updateClientDetails}
+            currentState={this.state.clientDetails}
+          />
+          <QuizPage
+            path="/quiz"
+            socket={socket}
+            updateClientDetails={this.updateClientDetails}
+            currentState={this.state.clientDetails}
+          />
+          <Gamepage
+            path="/game"
+            socket={socket}
+            updateClientDetails={this.updateClientDetails}
+            currentState={this.state.clientDetails}
+          />
         </Router>
       </div>
     );
