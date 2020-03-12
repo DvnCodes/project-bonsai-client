@@ -12,25 +12,53 @@ import GameSummary from "./components/Gamepage-components/GameSummary";
 const socket = socketIOClient("localhost:8080");
 
 class App extends React.Component {
-  state = { loggedIn: false, statsData: undefined };
+
+  state = {  statsData: undefined, clientDetails: { loggedIn: false } };
+
+  updateClientDetails = clientDetailsFromServer => {
+    this.setState({ clientDetails: clientDetailsFromServer });
+  };
+
+
   render() {
     return (
       <div className="App">
         <Header />
         <Router>
-          <Login path="/" socket={socket} />
-          <Lobby path="/lobby" socket={socket} />
-          <QuizPage path="/quiz" socket={socket} />
+
+        
+      
+
+          <Login
+            path="/"
+            socket={socket}
+            updateClientDetails={this.updateClientDetails}
+            currentState={this.state.clientDetails}
+          />
+          <Lobby
+            path="/lobby"
+            socket={socket}
+            updateClientDetails={this.updateClientDetails}
+            currentState={this.state.clientDetails}
+          />
+          <QuizPage
+            path="/quiz"
+            socket={socket}
+            updateClientDetails={this.updateClientDetails}
+            currentState={this.state.clientDetails}
+          />
           <Gamepage
             path="/game"
-            updateStatsData={this.updateStatsData}
             socket={socket}
+            updateClientDetails={this.updateClientDetails}
+            currentState={this.state.clientDetails}
           />
-          <GameSummary
+        <GameSummary
             path="/summary"
             statsData={this.state.statsData}
-            socket={socket}
-          />
+      updateClientDetails={this.updateClientDetails}
+            currentState={this.state.clientDetails}
+            socket={socket}/>
         </Router>
       </div>
     );

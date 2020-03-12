@@ -13,11 +13,14 @@ class Gamepage extends Component {
     showGameSummary: false
   };
   render() {
-    return (
+    return !this.props.currentState.loggedIn ? (
+      <Redirect noThrow to="/" />
+    ) : (
       <div>
         {this.state.showGameSummary && <Redirect noThrow to="/summary" />}{" "}
         <h1>GAMEPAGE</h1>
         {this.state.winner && <h2>{this.state.winner} wins!</h2>}
+
         <IonPhaser game={this.state.game} initialize={this.state.initialize} />
       </div>
     );

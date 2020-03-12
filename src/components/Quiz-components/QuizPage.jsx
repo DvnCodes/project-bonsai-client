@@ -46,7 +46,9 @@ class QuizPage extends Component {
       }
     }
 
-    return (
+    return !this.props.currentState.loggedIn ? (
+      <Redirect noThrow to="/" />
+    ) : (
       <div>
         <h1>Quiz</h1>
         {this.state.toGame && <Redirect noThrow to="/game" />}
