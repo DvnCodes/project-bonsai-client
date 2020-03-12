@@ -16,7 +16,8 @@ class QuizPage extends Component {
     answer: null,
     score: 0,
     answeredAll: false,
-    quizOver: false
+    quizOver: false,
+    toGame: false
   };
 
   componentDidMount() {
@@ -47,21 +48,13 @@ class QuizPage extends Component {
     return (
       <div>
         <h1>Quiz</h1>
-        {this.state.quizOver && <Redirect noThrow to="/game" />}
+        {this.state.toGame && <Redirect noThrow to="/game" />}
         {this.state.questions.length > 0 && (
           <>
             {!this.state.quizOver ? (
-              <Timer seconds={20} timeUp={this.quizOver} />
-            ) : (
               <>
-                <h2>Game Starting in:</h2>
-                <Timer seconds={10} timeUp={this.startGame} />
-              </>
-            )}
-            {this.state.answeredAll ? (
-              <QuizResultPage score={this.state.score} />
-            ) : (
-              <>
+                <Timer seconds={20} timeUp={this.quizOver} />
+
                 <p>Score: {this.state.score}</p>
                 <h2>{questions[currentQuestion].q} = ?</h2>
                 <ul>
@@ -74,12 +67,19 @@ class QuizPage extends Component {
                   })}
                 </ul>
               </>
+            ) : (
+              <>
+                <h2>Game Starting in:</h2>
+                <Timer seconds={100} timeUp={this.startGame} />
+                <QuizResultPage score={this.state.score} />
+              </>
             )}
           </>
         )}
       </div>
     );
   }
+
   handleAnswer = e => {
     const { questions, currentQuestion } = this.state;
     console.log(questions[currentQuestion].correctA);
