@@ -37,6 +37,8 @@ class App extends React.Component {
   }
 
   updateStatsData = statsData => {
+    console.log(statsData);
+
     this.setState({ statsData });
   };
 }

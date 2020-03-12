@@ -15,13 +15,7 @@ class Gamepage extends Component {
   render() {
     return (
       <div>
-        {this.state.showGameSummary && (
-          <Redirect
-            noThrow
-            to="/summary"
-            playerClientUpdateObject={this.state.playerClientUpdateObject}
-          />
-        )}{" "}
+        {this.state.showGameSummary && <Redirect noThrow to="/summary" />}{" "}
         <h1>GAMEPAGE</h1>
         {this.state.winner && <h2>{this.state.winner} wins!</h2>}
         <IonPhaser game={this.state.game} initialize={this.state.initialize} />
