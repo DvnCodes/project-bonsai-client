@@ -1,26 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import QuizPage from "./components/Quiz-components/QuizPage";
+import { Router } from "@reach/router";
+import Header from "./components/Header-components/Header";
+import Login from "./components/login-components/Login";
+import Lobby from "./components/Lobby-components/Lobby";
+import socketIOClient from "socket.io-client";
+import Gamepage from "./components/Gamepage-components/Gamepage";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const socket = socketIOClient("localhost:8080");
+
+class App extends React.Component {
+  state = { loggedIn: false };
+  render() {
+    return (
+      <div className="App">
+        <Header />
+        <Router>
+          <Login path="/" socket={socket} />
+          <Lobby path="/lobby" socket={socket} />
+          <QuizPage path="/quiz" socket={socket} />
+          <Gamepage path="/game" socket={socket} />
+        </Router>
+      </div>
+    );
+  }
 }
 
-export default App;
+export { App, socket };
