@@ -39,7 +39,7 @@ function create() {
   this.players = this.add.group();
   this.attacks = this.add.group();
   this.stats = this.add.group();
-  this.something = this.add.group();
+  this.spells = this.add.group();
   dolly = this.physics.add.image(100, 100, "star");
   this.cameras.main.setDeadzone(10, 10);
   this.cameras.main.startFollow(dolly, true, 0.3, 0.3);
@@ -79,12 +79,14 @@ function create() {
     });
   });
 
-  this.socket.on("somethingAdded", somethingInfo => {
-    showSomething(self, somethingInfo.player, somethingInfo.thing);
+
+  this.socket.on("spellAdded", spellInfo => {
+    console.log(socket.id);
+    console.log("thingthing", spellInfo.thing);
+    showspell(self, spellInfo.player, spellInfo.thing);
   });
 
   this.socket.on("playerUpdates", players => {
-    // if (players[this.socket.id].life !== life) {
     if (players[this.socket.id] !== undefined) {
       if (life === undefined) {
         life = players[this.socket.id].life;
@@ -97,15 +99,12 @@ function create() {
         displayLife(self, players[this.socket.id]);
       } else {
         self.stats.getChildren().forEach(stat => {
-          // console.log(id);
           stat.setPosition(
             players[this.socket.id].x,
             players[this.socket.id].y + 100
           );
         });
       }
-      // this.stats[this.socket.id].x = players[this.socket.id].x + 190;
-      // this.stats[this.socket.id].y = players[this.socket.id].y - 150;
     }
     Object.keys(players).forEach(id => {
       self.players.getChildren().forEach(player => {
@@ -121,26 +120,22 @@ function create() {
         }
       });
     });
-    // self.players.getChildren().forEach(player => {
-    //   console.log(player.playerID);
-    //   if (players[player.playerID] === undefined) {
-    //     player.destroy();
-    //   }
-    // });
+
     if (players[this.socket.id])
       dolly.setPosition(players[this.socket.id].x, players[this.socket.id].y);
   });
 
-  this.socket.on("somethingUpdates", data => {
-    self.something.getChildren().forEach(something => {
-      if (data.somethings[something.somethingID] === undefined) {
-        something.destroy();
+  this.socket.on("spellUpdates", data => {
+    self.spells.getChildren().forEach(spell => {
+      if (data.spells[spell.spellID] === undefined) {
+        spell.destroy();
       }
     });
-    Object.keys(data.somethings).forEach(id => {
-      self.something.getChildren().forEach(something => {
-        if (something.somethingID === id) {
-          something.setPosition(data.players[id].x, data.players[id].y);
+    console.log(data);
+    Object.keys(data.spells).forEach(id => {
+      self.spells.getChildren().forEach(spell => {
+        if (spell.spellID === id) {
+          spell.setPosition(data.players[id].x, data.players[id].y);
         }
       });
     });
@@ -228,7 +223,7 @@ function update() {
       down: this.downKeyPressed
     });
   }
-  // if (this.cursors.space.JustDown) {
+
   if (Phaser.Input.Keyboard.JustDown(spacebar)) {
     console.log("SHOOTING!!!");
     this.socket.emit("attackInput", "hi");
@@ -239,7 +234,7 @@ function update() {
   }
   if (Phaser.Input.Keyboard.JustDown(wu)) {
     console.log("something!!!");
-    this.socket.emit("something", "firering");
+    this.socket.emit("spell", "firering");
   }
 }
 
@@ -248,11 +243,6 @@ function displayPlayers(self, playerInfo, sprite) {
     .sprite(playerInfo.x, playerInfo.y, sprite)
     .setOrigin(0.5, 0.5)
     .setDisplaySize(50, 50);
-  // if (playerInfo.team === "blue") {
-  //   // player.setTint(0x0000ff);
-  // } else {
-  //   // player.setTint(0xff0000);
-  // }
 
   player.playerID = playerInfo.playerID;
   self.players.add(player);
@@ -275,12 +265,12 @@ function displayLife(self, player) {
   self.stats.add(myLife);
 }
 
-function showSomething(self, player, sprite) {
-  const mySomething = self.add
+function showspell(self, player, sprite) {
+  const myspell = self.add
     .sprite(player.x, player.y, sprite)
     .setDisplaySize(125, 125);
-  mySomething.somethingID = player.playerID;
-  self.something.add(mySomething);
+  myspell.spellID = player.playerID;
+  self.spells.add(myspell);
 }
 
 const gameSceneConfig = {
