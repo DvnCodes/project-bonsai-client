@@ -55,7 +55,6 @@ class Login extends React.Component {
 
   handleSubmit = event => {
     const { username } = this.state;
-    console.log("submitform");
     event.preventDefault();
 
     this.props.socket.emit("playerLogin", username);
@@ -66,7 +65,6 @@ class Login extends React.Component {
 
   componentDidMount() {
     this.props.socket.on("loginAuthorised", authorized => {
-      console.log("WE MANAGED TOO LOGIN");
       this.setState({ loggedIn: authorized });
     });
   }

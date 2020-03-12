@@ -9,11 +9,11 @@ class Lobby extends Component {
     currentLobbyGuests: []
   };
   render() {
+    console.log(this.state.currentLobbyGuests);
     return (
       <div>
         {this.state.everyoneReady === true && <Redirect noThrow to="/quiz" />}
         <h1>Quiz Lobby</h1>
-        {console.log("lobbyGUESTS", this.state.currentLobbyGuests)}
         {this.state.everyoneReady === false && (
           <button onClick={this.readyUp}>READY</button>
         )}
@@ -27,7 +27,7 @@ class Lobby extends Component {
           <ul>
             {this.state.currentLobbyGuests.map(guest => {
               return (
-                <li>
+                <li key={guest.socket}>
                   {guest.username} {guest.ready}
                 </li>
               );
@@ -36,13 +36,11 @@ class Lobby extends Component {
         </div>
         <ul>
           <h2> CHAT</h2>
-          {this.state.chat.map(comment => {
-            return (
-              <li>
-                {comment.user} {comment.message}
-              </li>
-            );
-          })}
+          <ul>
+            {this.state.chat.map((comment, iteratee) => {
+              return <li key={iteratee}>{comment}</li>;
+            })}
+          </ul>
         </ul>
         <form onSubmit={this.sendMessage}>
           <input
@@ -56,15 +54,42 @@ class Lobby extends Component {
     );
   }
   componentDidMount() {
-    console.log(this.props.socket.id);
+    //guests joining and leaving lobby messages
+
     this.props.socket.emit("joinedLobby", "hi");
-    this.props.socket.on("currentLobbyData", lobbyData => {
-      console.log("userlist", lobbyData);
+    this.props.socket.on("currentLobbyGuests", lobbyGuests => {
+      console.log("userlist", lobbyGuests);
       this.setState({
-        currentLobbyGuests: lobbyData.users,
-        chat: lobbyData.messages
+        currentLobbyGuests: lobbyGuests
       });
     });
+    this.props.socket.on("newLobbyAddition", newGuest => {
+      this.setState(currentState => {
+        const updatedLobbyGuestList = [...currentState.currentLobbyGuests];
+        updatedLobbyGuestList.push(newGuest);
+        return {
+          currentLobbyGuests: updatedLobbyGuestList
+        };
+      });
+    });
+
+    //lobby guests sending and receiving messages
+    this.props.socket.on("playerJoinedLobbyNotification", data => {
+      this.setState(currentState => {
+        const updatedChatHistory = [...currentState.chat];
+        updatedChatHistory.push(`${data.user}: ${data.message}`);
+        return { chat: updatedChatHistory };
+      });
+    });
+    this.props.socket.on("lobbyMessageBroadcast", data => {
+      this.setState(currentState => {
+        const updatedChatHistory = [...currentState.chat];
+        updatedChatHistory.push(`${data.user}: ${data.message}`);
+        return { chat: updatedChatHistory };
+      });
+    });
+
+    //join next quiz messages
     this.props.socket.on("startGame", lobbyData => {
       console.log("EVERYONES READY");
       this.setState({ everyoneReady: true });
@@ -81,7 +106,7 @@ class Lobby extends Component {
   sendMessage = event => {
     event.preventDefault();
 
-    this.props.socket.emit("newMessage", this.state.chatInput);
+    this.props.socket.emit("lobbyMessageSend", this.state.chatInput);
     this.setState({ chatInput: "" });
   };
 }
