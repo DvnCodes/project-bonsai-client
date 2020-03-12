@@ -16,6 +16,7 @@ class Gamepage extends Component {
     ) : (
       <div>
         <h1>GAMEPAGE</h1>
+        <div id="test"></div>
         <IonPhaser game={this.state.game} initialize={this.state.initialize} />
       </div>
     );
