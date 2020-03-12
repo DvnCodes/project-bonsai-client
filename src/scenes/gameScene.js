@@ -13,7 +13,6 @@ let wu;
 let ee;
 
 function preload() {
-  console.log(socket.id);
   this.load.image("genie", "assets/10.png");
   this.load.image("baddie", "assets/13.png");
   this.load.image("star", "assets/star.png");
@@ -46,7 +45,6 @@ function create() {
 
   this.socket.on("currentPlayers", players => {
     Object.keys(players).forEach(id => {
-      console.log(id);
       if (players[id].playerID === self.socket.id) {
         displayPlayers(self, players[id], "genie");
       } else {
@@ -129,7 +127,6 @@ function create() {
         spell.destroy();
       }
     });
-    console.log(data);
     Object.keys(data.spells).forEach(id => {
       self.spells.getChildren().forEach(spell => {
         if (spell.spellID === id) {
