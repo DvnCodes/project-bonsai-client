@@ -16,15 +16,21 @@ class GameSummary extends Component {
         })}
 
         <ul>
-          {Object.keys(this.state.statsData).map(ID => {
-            return (
-              <li>
-                {this.state.statsData[ID].username} : KILLS:{" "}
-                {this.state.statsData[ID].kills} HITS:{" "}
-                {this.state.statsData[ID].hits}
-              </li>
-            );
-          })}
+          {Object.keys(this.state.statsData)
+            .sort((a, b) => (a.rank > b.rank ? 1 : -1))
+            .map(ID => {
+              return (
+                <li>
+                  {this.state.statsData[ID].username} : RANK:{" "}
+                  {this.state.statsData[ID].rank}
+                  KILLS: {this.state.statsData[ID].kills}
+                  HITS: {this.state.statsData[ID].hits}
+                  ACCURACY:
+                  {this.state.statsData[ID].spellsCast /
+                    this.state.statsData[ID].hits}
+                </li>
+              );
+            })}
         </ul>
       </div>
     );

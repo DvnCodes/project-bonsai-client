@@ -9,9 +9,9 @@ class Gamepage extends Component {
     initialize: true,
     game: gameSceneConfig,
     endpoint: "https://projects-game-backend.herokuapp.com/",
-    socket: this.props.socket,   
+    socket: this.props.socket,
     winner: null,
-    showGameSummary: false
+    showGameSummary: false,
     isBanished: false
   };
 
