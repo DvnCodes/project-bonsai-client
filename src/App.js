@@ -28,7 +28,7 @@ class App extends React.Component {
     return (
       <>
         <Header />
-        {/* <audio src="./assets/battleMusic.wav" autoPlay="true" /> */}
+        <audio src="./assets/battleMusic.wav" autoPlay="true" />
         <Router className="main">
           <Login
             path="/"
@@ -52,6 +52,7 @@ class App extends React.Component {
             path="/game"
             socket={socket}
             updateClientDetails={this.updateClientDetails}
+            updateStatsData={this.updateStatsData}
             currentState={this.state.clientDetails}
           />
           <GameSummary
@@ -67,8 +68,6 @@ class App extends React.Component {
   }
 
   updateStatsData = statsData => {
-    console.log(statsData);
-
     this.setState({ statsData });
   };
 }

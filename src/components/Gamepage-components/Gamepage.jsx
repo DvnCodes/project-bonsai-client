@@ -9,14 +9,19 @@ class Gamepage extends Component {
     initialize: true,
     game: gameSceneConfig,
     endpoint: "https://projects-game-backend.herokuapp.com/",
-    socket: this.props.socket,
+    socket: this.props.socket,   
     winner: null,
     showGameSummary: false
+    isBanished: false
   };
+
   render() {
+    const { isBanished } = this.state;
+
     return !this.props.currentState.loggedIn ? (
       <Redirect noThrow to="/" />
     ) : (
+
       <>
         {this.state.showGameSummary && <Redirect noThrow to="/summary" />}{" "}
         <h1>GAMEPAGE</h1>
@@ -30,6 +35,7 @@ class Gamepage extends Component {
             game={this.state.game}
             initialize={this.state.initialize}
           />
+           {isBanished && <h1>BANISHED</h1>}
         </div>
       </>
     );
@@ -44,6 +50,16 @@ class Gamepage extends Component {
       this.props.updateStatsData(playerClientUpdateObject);
       this.setState({ showGameSummary: true });
     });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state !== prevState) {
+      this.state.socket.on("onDie", playerId => {
+        if (playerId === this.state.socket.id) {
+          this.setState({ isBanished: true });
+        }
+      });
+    }
   }
 }
 
