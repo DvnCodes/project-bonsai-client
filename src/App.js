@@ -20,19 +20,16 @@ class App extends React.Component {
     statsData: undefined
   };
 
-
   updateClientDetails = clientDetailsFromServer => {
     this.setState({ clientDetails: clientDetailsFromServer });
   };
-
 
   render() {
     return (
       <>
         <Header />
-        {/* <audio src="./assets/battleMusic.wav" autoPlay="true" /> */}
+        <audio src="./assets/battleMusic.wav" autoPlay="true" />
         <Router className="main">
-
           <Login
             path="/"
             socket={socket}
@@ -55,22 +52,22 @@ class App extends React.Component {
             path="/game"
             socket={socket}
             updateClientDetails={this.updateClientDetails}
+            updateStatsData={this.updateStatsData}
             currentState={this.state.clientDetails}
           />
-        <GameSummary
+          <GameSummary
             path="/summary"
             statsData={this.state.statsData}
-      updateClientDetails={this.updateClientDetails}
+            updateClientDetails={this.updateClientDetails}
             currentState={this.state.clientDetails}
-            socket={socket}/>
+            socket={socket}
+          />
         </Router>
       </>
     );
   }
 
   updateStatsData = statsData => {
-    console.log(statsData);
-
     this.setState({ statsData });
   };
 }
