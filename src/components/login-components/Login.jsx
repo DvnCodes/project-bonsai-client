@@ -1,5 +1,7 @@
 import React from "react";
 import { Link } from "@reach/router";
+import { PrimaryContainer } from "../Styles/container.styles";
+import { StyledButton } from "../Styles/ui.styles";
 
 class Login extends React.Component {
   state = {
@@ -10,7 +12,7 @@ class Login extends React.Component {
   render() {
     const { username } = this.state;
     return (
-      <section>
+      <PrimaryContainer>
         {this.state.loggedIn === false && (
           <form onSubmit={this.handleSubmit}>
             <input
@@ -30,7 +32,7 @@ class Login extends React.Component {
               onChange={this.handleInput}
             ></input> */}
 
-            <button>log in</button>
+            <StyledButton>log in</StyledButton>
           </form>
         )}
         {this.state.loggedIn === true && (
@@ -41,7 +43,7 @@ class Login extends React.Component {
             </Link>
           </>
         )}
-      </section>
+      </PrimaryContainer>
     );
     /* / Lobby link - on submit emits a 'player login' message, which the server will
        listen out for and send a response. When the login is authorised or

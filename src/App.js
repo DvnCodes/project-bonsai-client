@@ -10,10 +10,16 @@ import Gamepage from "./components/Gamepage-components/Gamepage";
 import GameSummary from "./components/Gamepage-components/GameSummary";
 
 const socket = socketIOClient("localhost:8080");
+// const socket = socketIOClient("masters-of-maths.herokuapp.com");
 
 class App extends React.Component {
+  state = {
+    clientDetails: { loggedIn: false },
+    audioPlay: false,
+    selectedTrack: null,
+    statsData: undefined
+  };
 
-  state = {  statsData: undefined, clientDetails: { loggedIn: false } };
 
   updateClientDetails = clientDetailsFromServer => {
     this.setState({ clientDetails: clientDetailsFromServer });
@@ -22,12 +28,10 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="App">
+      <>
         <Header />
-        <Router>
-
-        
-      
+        {/* <audio src="./assets/battleMusic.wav" autoPlay="true" /> */}
+        <Router className="main">
 
           <Login
             path="/"
@@ -60,7 +64,7 @@ class App extends React.Component {
             currentState={this.state.clientDetails}
             socket={socket}/>
         </Router>
-      </div>
+      </>
     );
   }
 
