@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Timer from "./Timer";
 import QuizResultPage from "./QuizResultPage";
 import { Redirect } from "@reach/router";
-import { socket } from "../../App";
+
 class QuizPage extends Component {
   state = {
     questions: [
@@ -20,14 +20,13 @@ class QuizPage extends Component {
     quizFinishTime: null,
     toGame: false,
     quizResults: []
-
   };
 
   componentDidMount() {
     console.log("mounting");
     this.props.socket.emit("sendQuizQuestions");
-
     this.props.socket.on("beginQuiz", (questionsList, finishTime) => {
+      console.log(questionsList);
       this.setState({ questions: questionsList, quizFinishTime: finishTime });
     });
   }
@@ -38,7 +37,8 @@ class QuizPage extends Component {
       quizOver,
       quizFinishTime,
       answeredAll,
-      score
+      score,
+      toGame
     } = this.state;
     let answers;
 
@@ -59,22 +59,16 @@ class QuizPage extends Component {
     return (
       <div>
         <h1>Quiz</h1>
-        {quizOver && <Redirect noThrow to="/game" />}
+        {toGame && <Redirect noThrow to="/game" />}
+        {/* {questions.length > 0 && ( */}
+
+        {Date.now() === quizFinishTime && this.quizOver}
         {questions.length > 0 && (
           <>
-            {Date.now() === quizFinishTime && this.quizOver}
+            {" "}
             {!quizOver ? (
-              <Timer seconds={20} timeUp={this.quizOver} />
-            ) : (
               <>
-                <h2>Game Starting in:</h2>
-                <Timer seconds={10} timeUp={this.startGame} />
-              </>
-            )}
-            {answeredAll ? (
-              <QuizResultPage score={score} />
-            ) : (
-              <>
+                <Timer seconds={20} timeUp={this.quizOver} />
                 <p>Score: {score}</p>
                 <h2>{questions[currentQuestion].q} = ?</h2>
                 <ul>
@@ -151,7 +145,6 @@ class QuizPage extends Component {
   };
   quizOver = () => {
     this.setState({ quizOver: true, answeredAll: true });
-    console.log("quiz over");
     this.props.socket.emit("clientGameReady", this.state.score);
   };
   startGame = () => {

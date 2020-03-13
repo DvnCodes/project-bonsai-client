@@ -9,8 +9,6 @@ class Lobby extends Component {
     currentLobbyGuests: []
   };
   render() {
-
-    console.log(this.state.currentLobbyGuests);
     return !this.props.currentState.loggedIn ? (
       <Redirect noThrow to="/" />
     ) : (
@@ -71,11 +69,9 @@ class Lobby extends Component {
   componentDidMount() {
     //guests joining and leaving lobby messages
 
-
     this.props.socket.emit("joinedLobby");
 
     this.props.socket.on("currentLobbyGuests", lobbyGuests => {
-      console.log("userlist", lobbyGuests);
       this.setState({
         currentLobbyGuests: lobbyGuests
       });
@@ -93,7 +89,6 @@ class Lobby extends Component {
       this.props.updateClientDetails(updatedClientDetails);
     });
     this.props.socket.on("lobbyGuestStateUpdate", userDetails => {
-      console.log(userDetails);
       this.setState(currentState => {
         let lobbyGuestUpdate = currentState.currentLobbyGuests;
         if (userDetails.inLobby === false) {
@@ -129,7 +124,6 @@ class Lobby extends Component {
 
     //join next quiz messages
     this.props.socket.on("startGame", lobbyData => {
-      console.log("EVERYONES READY");
       this.setState({ everyoneReady: true });
     });
   }
