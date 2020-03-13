@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Timer from "./Timer";
 import QuizResultPage from "./QuizResultPage";
 import { Redirect } from "@reach/router";
+import { socket } from "../../App";
 
 class QuizPage extends Component {
   state = {
@@ -16,18 +17,27 @@ class QuizPage extends Component {
     answer: null,
     score: 0,
     answeredAll: false,
-    quizOver: false
+    quizOver: false,
+    quizFinishTime: null
   };
 
   componentDidMount() {
+    console.log("mounting");
     this.props.socket.emit("sendQuizQuestions");
 
-    this.props.socket.on("beginQuiz", data => {
-      this.setState({ questions: data });
+    this.props.socket.on("beginQuiz", (questionsList, finishTime) => {
+      this.setState({ questions: questionsList, quizFinishTime: finishTime });
     });
   }
   render() {
-    const { questions, currentQuestion } = this.state;
+    const {
+      questions,
+      currentQuestion,
+      quizOver,
+      quizFinishTime,
+      answeredAll,
+      score
+    } = this.state;
     let answers;
 
     if (questions[currentQuestion]) {
@@ -44,13 +54,15 @@ class QuizPage extends Component {
       }
     }
 
+    console.log(quizFinishTime, Date.now(), "TIMES");
     return (
       <div>
         <h1>Quiz</h1>
-        {this.state.quizOver && <Redirect noThrow to="/game" />}
-        {this.state.questions.length > 0 && (
+        {quizOver && <Redirect noThrow to="/game" />}
+        {questions.length > 0 && (
           <>
-            {!this.state.quizOver ? (
+            {Date.now() === quizFinishTime && this.quizOver}
+            {!quizOver ? (
               <Timer seconds={20} timeUp={this.quizOver} />
             ) : (
               <>
@@ -58,11 +70,11 @@ class QuizPage extends Component {
                 <Timer seconds={10} timeUp={this.startGame} />
               </>
             )}
-            {this.state.answeredAll ? (
-              <QuizResultPage score={this.state.score} />
+            {answeredAll ? (
+              <QuizResultPage score={score} />
             ) : (
               <>
-                <p>Score: {this.state.score}</p>
+                <p>Score: {score}</p>
                 <h2>{questions[currentQuestion].q} = ?</h2>
                 <ul>
                   {answers.map((answer, i) => {
