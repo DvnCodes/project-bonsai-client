@@ -8,7 +8,7 @@ export const HeaderContainer = styled.header`
 `;
 
 export const PrimaryContainer = styled.section`
-  width: 100%
+  width: 100%;
   background-color: ${theme.e};
   flex-grow: 1;
   margin: 0;
