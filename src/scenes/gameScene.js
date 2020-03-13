@@ -270,7 +270,7 @@ function showspell(self, player, sprite) {
 
 const gameSceneConfig = {
   type: Phaser.AUTO,
-  parent: "test",
+  parent: "gameWindow",
   width: 800,
   height: 600,
   physics: {
