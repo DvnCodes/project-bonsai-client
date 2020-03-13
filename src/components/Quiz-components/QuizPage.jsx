@@ -16,7 +16,9 @@ class QuizPage extends Component {
     answer: null,
     score: 0,
     answeredAll: false,
-    quizOver: false
+    quizOver: false,
+    toGame: false,
+    quizResults: []
   };
 
   componentDidMount() {
@@ -49,21 +51,13 @@ class QuizPage extends Component {
     ) : (
       <div>
         <h1>Quiz</h1>
-        {this.state.quizOver && <Redirect noThrow to="/game" />}
+        {this.state.toGame && <Redirect noThrow to="/game" />}
         {this.state.questions.length > 0 && (
           <>
             {!this.state.quizOver ? (
-              <Timer seconds={20} timeUp={this.quizOver} />
-            ) : (
               <>
-                <h2>Game Starting in:</h2>
-                <Timer seconds={10} timeUp={this.startGame} />
-              </>
-            )}
-            {this.state.answeredAll ? (
-              <QuizResultPage score={this.state.score} />
-            ) : (
-              <>
+                <Timer seconds={50} timeUp={this.quizOver} />
+
                 <p>Score: {this.state.score}</p>
                 <h2>{questions[currentQuestion].q} = ?</h2>
                 <ul>
@@ -76,23 +70,37 @@ class QuizPage extends Component {
                   })}
                 </ul>
               </>
+            ) : (
+              <>
+                <h2>Game Starting in:</h2>
+                <Timer seconds={50} timeUp={this.startGame} />
+                <QuizResultPage
+                  score={this.state.score}
+                  quizResults={this.state.quizResults}
+                />
+              </>
             )}
           </>
         )}
       </div>
     );
   }
+
   handleAnswer = e => {
     const { questions, currentQuestion } = this.state;
-    console.log(questions[currentQuestion].correctA);
-    console.log(e.target.innerText);
     if (parseInt(e.target.innerText) === questions[currentQuestion].correctA) {
       this.setState(currentState => {
         const nextQuestion = currentState.currentQuestion + 1;
         const newScore = currentState.score + 1;
-        console.log("newscore", newScore);
-        console.log(nextQuestion);
-        return { currentQuestion: nextQuestion, score: newScore };
+
+        const newResults = [...currentState.quizResults];
+        newResults.push([this.state.questions[currentQuestion], "correct"]);
+
+        return {
+          currentQuestion: nextQuestion,
+          score: newScore,
+          quizResults: newResults
+        };
       });
     }
     if (
@@ -102,8 +110,14 @@ class QuizPage extends Component {
       this.setState(currentState => {
         const nextQuestion = currentState.currentQuestion + 1;
         const newScore = currentState.score - 1;
+        const newResults = [...currentState.quizResults];
+        newResults.push([this.state.questions[currentQuestion], "incorrect"]);
 
-        return { currentQuestion: nextQuestion, score: newScore };
+        return {
+          currentQuestion: nextQuestion,
+          score: newScore,
+          quizResults: newResults
+        };
       });
     } else {
       this.setState(currentState => {
@@ -124,7 +138,7 @@ class QuizPage extends Component {
     this.props.socket.emit("clientGameReady", this.state.score);
   };
   startGame = () => {
-    console.log("START GAME");
+    this.setState({ toGame: true });
   };
 }
 export default QuizPage;

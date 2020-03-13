@@ -9,6 +9,7 @@ class Lobby extends Component {
     currentLobbyGuests: []
   };
   render() {
+
     console.log(this.state.currentLobbyGuests);
     return !this.props.currentState.loggedIn ? (
       <Redirect noThrow to="/" />
@@ -69,7 +70,10 @@ class Lobby extends Component {
   }
   componentDidMount() {
     //guests joining and leaving lobby messages
-    this.props.socket.emit("joinedLobby", "hi");
+
+
+    this.props.socket.emit("joinedLobby");
+
     this.props.socket.on("currentLobbyGuests", lobbyGuests => {
       console.log("userlist", lobbyGuests);
       this.setState({
