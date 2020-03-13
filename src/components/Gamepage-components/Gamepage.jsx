@@ -17,7 +17,7 @@ class Gamepage extends Component {
     return !this.props.currentState.loggedIn ? (
       <Redirect noThrow to="/" />
     ) : (
-      <div>
+      <>
         {this.state.showGameSummary && <Redirect noThrow to="/summary" />}{" "}
         <h1>GAMEPAGE</h1>
         {this.state.winner && (
@@ -31,7 +31,7 @@ class Gamepage extends Component {
             initialize={this.state.initialize}
           />
         </div>
-      </div>
+      </>
     );
   }
 
