@@ -2,11 +2,38 @@
 font-family: 'Press Start 2P', cursive;
 font-family: 'Rock Salt', cursive; */
 
+#whatColoursAmIUsing {
+  background-color: #ba1200;
+  background-color: #031927;
+  background-color: #9dd1f1;
+  background-color: #508aa8;
+  background-color: #c8e0f4;
+}
+
 body {
   background-color: gray;
   margin: 0px;
+  padding: 0px;
   text-align: center;
   font-family: "Press Start 2P", cursive;
+  scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overscroll-behavior: none;
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
 }
 
 .header {
@@ -16,7 +43,6 @@ body {
   padding: 10px;
   font-size: 1.5em;
 }
-
 
 .header h1 {
   margin: 0;
