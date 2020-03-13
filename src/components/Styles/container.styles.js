@@ -40,9 +40,6 @@ export const MegaNotificationContainer = styled.aside`
       z-index: 10;
       top: 0%;
     }
-    1% {
-      /* z-index: 5; */
-    }
     15% {
       opacity: 1;
       top: 30%;

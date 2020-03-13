@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { IonPhaser } from "@ion-phaser/react";
 import { gameSceneConfig } from "../../scenes/gameScene";
 import { Redirect } from "@reach/router";
+import { MegaNotificationContainer } from "../Styles/container.styles";
 
 class Gamepage extends Component {
   state = {
@@ -19,7 +20,11 @@ class Gamepage extends Component {
       <div>
         {this.state.showGameSummary && <Redirect noThrow to="/summary" />}{" "}
         <h1>GAMEPAGE</h1>
-        {this.state.winner && <h2>{this.state.winner} wins!</h2>}
+        {this.state.winner && (
+          <MegaNotificationContainer>
+            <h2>{this.state.winner} wins!</h2>
+          </MegaNotificationContainer>
+        )}
         <div id="gameWindow">
           <IonPhaser
             game={this.state.game}

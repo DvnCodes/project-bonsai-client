@@ -16,9 +16,6 @@ class Login extends React.Component {
     const { username } = this.state;
     return (
       <PrimaryContainer>
-        <MegaNotificationContainer>
-          <h2>Banished!</h2>
-        </MegaNotificationContainer>
         {this.state.loggedIn === false && (
           <form onSubmit={this.handleSubmit}>
             <input
