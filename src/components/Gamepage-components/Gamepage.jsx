@@ -54,13 +54,4 @@ class Gamepage extends Component {
   }
 }
 
-/*
-onDie listener emits player.playerID
-all clients listen for banished, if the socket.id is the same as player, then
-have a listener in the gamepage, which sets isBanished: true is state
-if isBanished:true - a func component is rendered
-func component renders a <h1> 'Banished' </h1> which transitions on screen over the game.
-
-*/
-
 export default Gamepage;

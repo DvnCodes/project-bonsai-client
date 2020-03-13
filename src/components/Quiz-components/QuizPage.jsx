@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Timer from "./Timer";
 import QuizResultPage from "./QuizResultPage";
 import { Redirect } from "@reach/router";
-
+import { socket } from "../../App";
 class QuizPage extends Component {
   state = {
     questions: [
@@ -17,19 +17,29 @@ class QuizPage extends Component {
     score: 0,
     answeredAll: false,
     quizOver: false,
+    quizFinishTime: null,
     toGame: false,
     quizResults: []
+
   };
 
   componentDidMount() {
+    console.log("mounting");
     this.props.socket.emit("sendQuizQuestions");
 
-    this.props.socket.on("beginQuiz", data => {
-      this.setState({ questions: data });
+    this.props.socket.on("beginQuiz", (questionsList, finishTime) => {
+      this.setState({ questions: questionsList, quizFinishTime: finishTime });
     });
   }
   render() {
-    const { questions, currentQuestion } = this.state;
+    const {
+      questions,
+      currentQuestion,
+      quizOver,
+      quizFinishTime,
+      answeredAll,
+      score
+    } = this.state;
     let answers;
 
     if (questions[currentQuestion]) {
@@ -46,19 +56,26 @@ class QuizPage extends Component {
       }
     }
 
-    return !this.props.currentState.loggedIn ? (
-      <Redirect noThrow to="/" />
-    ) : (
+    return (
       <div>
         <h1>Quiz</h1>
-        {this.state.toGame && <Redirect noThrow to="/game" />}
-        {this.state.questions.length > 0 && (
+        {quizOver && <Redirect noThrow to="/game" />}
+        {questions.length > 0 && (
           <>
-            {!this.state.quizOver ? (
+            {Date.now() === quizFinishTime && this.quizOver}
+            {!quizOver ? (
+              <Timer seconds={20} timeUp={this.quizOver} />
+            ) : (
               <>
-                <Timer seconds={50} timeUp={this.quizOver} />
-
-                <p>Score: {this.state.score}</p>
+                <h2>Game Starting in:</h2>
+                <Timer seconds={10} timeUp={this.startGame} />
+              </>
+            )}
+            {answeredAll ? (
+              <QuizResultPage score={score} />
+            ) : (
+              <>
+                <p>Score: {score}</p>
                 <h2>{questions[currentQuestion].q} = ?</h2>
                 <ul>
                   {answers.map((answer, i) => {
