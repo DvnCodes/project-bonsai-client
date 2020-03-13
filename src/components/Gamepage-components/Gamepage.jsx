@@ -20,8 +20,12 @@ class Gamepage extends Component {
         {this.state.showGameSummary && <Redirect noThrow to="/summary" />}{" "}
         <h1>GAMEPAGE</h1>
         {this.state.winner && <h2>{this.state.winner} wins!</h2>}
-
-        <IonPhaser game={this.state.game} initialize={this.state.initialize} />
+        <div id="gameWindow">
+          <IonPhaser
+            game={this.state.game}
+            initialize={this.state.initialize}
+          />
+        </div>
       </div>
     );
   }

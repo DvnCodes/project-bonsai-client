@@ -1,6 +1,9 @@
 import React from "react";
 import { Link } from "@reach/router";
-import { PrimaryContainer } from "../Styles/container.styles";
+import {
+  PrimaryContainer,
+  MegaNotificationContainer
+} from "../Styles/container.styles";
 import { StyledButton } from "../Styles/ui.styles";
 
 class Login extends React.Component {
@@ -13,6 +16,9 @@ class Login extends React.Component {
     const { username } = this.state;
     return (
       <PrimaryContainer>
+        <MegaNotificationContainer>
+          <h2>Banished!</h2>
+        </MegaNotificationContainer>
         {this.state.loggedIn === false && (
           <form onSubmit={this.handleSubmit}>
             <input
