@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Timer from "./Timer";
 import QuizResultPage from "./QuizResultPage";
 import { Redirect } from "@reach/router";
-import { socket } from "../../App";
+
 class QuizPage extends Component {
   state = {
     questions: [
@@ -25,7 +25,6 @@ class QuizPage extends Component {
   componentDidMount() {
     console.log("mounting");
     this.props.socket.emit("sendQuizQuestions");
-
     this.props.socket.on("beginQuiz", (questionsList, finishTime) => {
       console.log(questionsList);
       this.setState({ questions: questionsList, quizFinishTime: finishTime });
@@ -64,29 +63,34 @@ class QuizPage extends Component {
         {/* {questions.length > 0 && ( */}
 
         {Date.now() === quizFinishTime && this.quizOver}
-        {!quizOver ? (
+        {questions.length > 0 && (
           <>
-            <Timer seconds={20} timeUp={this.quizOver} />
-            <p>Score: {score}</p>
-            <h2>{questions[currentQuestion].q} = ?</h2>
-            <ul>
-              {answers.map((answer, i) => {
-                return (
-                  <li key={i}>
-                    <button onClick={this.handleAnswer}>{answer}</button>
-                  </li>
-                );
-              })}
-            </ul>
-          </>
-        ) : (
-          <>
-            <h2>Game Starting in:</h2>
-            <Timer seconds={50} timeUp={this.startGame} />
-            <QuizResultPage
-              score={this.state.score}
-              quizResults={this.state.quizResults}
-            />
+            {" "}
+            {!quizOver ? (
+              <>
+                <Timer seconds={20} timeUp={this.quizOver} />
+                <p>Score: {score}</p>
+                <h2>{questions[currentQuestion].q} = ?</h2>
+                <ul>
+                  {answers.map((answer, i) => {
+                    return (
+                      <li key={i}>
+                        <button onClick={this.handleAnswer}>{answer}</button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </>
+            ) : (
+              <>
+                <h2>Game Starting in:</h2>
+                <Timer seconds={50} timeUp={this.startGame} />
+                <QuizResultPage
+                  score={this.state.score}
+                  quizResults={this.state.quizResults}
+                />
+              </>
+            )}
           </>
         )}
       </div>
@@ -126,21 +130,19 @@ class QuizPage extends Component {
           quizResults: newResults
         };
       });
+    } else {
+      this.setState(currentState => {
+        const nextQuestion = currentState.currentQuestion + 1;
+        return { currentQuestion: nextQuestion };
+      });
     }
-
-    // else {
-    //   this.setState(currentState => {
-    //     const nextQuestion = currentState.currentQuestion + 1;
-    //     return { currentQuestion: nextQuestion };
-    //   });
-    // }
-    // if (currentQuestion + 1 === questions.length) {
-    //   return this.answeredAll();
-    // }
+    if (currentQuestion + 1 === questions.length) {
+      return this.answeredAll();
+    }
   };
-  // answeredAll = () => {
-  //   this.setState({ answeredAll: true });
-  // };
+  answeredAll = () => {
+    this.setState({ answeredAll: true });
+  };
   quizOver = () => {
     this.setState({ quizOver: true, answeredAll: true });
     this.props.socket.emit("clientGameReady", this.state.score);
