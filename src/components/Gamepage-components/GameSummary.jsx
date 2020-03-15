@@ -1,7 +1,15 @@
 import React, { Component } from "react";
+import { Link } from "@reach/router";
 
 class GameSummary extends Component {
   state = { statsData: this.props.statsData };
+
+  onClick = event => {
+    this.props.socket.emit(
+      "goLobbyFromGame",
+      this.state.statsData[this.props.socket.id].rank
+    );
+  };
 
   render() {
     return (
@@ -9,10 +17,11 @@ class GameSummary extends Component {
         <h1>Game Summary</h1>
 
         {Object.keys(this.state.statsData).map(ID => {
-          console.log(this.state.statsData[ID].winner);
-          if (this.state.statsData[ID].winner === true) {
-            return <h2>WINNER: {this.state.statsData[ID].username}</h2>;
-          }
+          return (
+            this.state.statsData[ID].winner && (
+              <h2 key={ID}>WINNER: {this.state.statsData[ID].username}</h2>
+            )
+          );
         })}
 
         <ul>
@@ -20,7 +29,7 @@ class GameSummary extends Component {
             .sort((a, b) => (a.rank > b.rank ? 1 : -1))
             .map(ID => {
               return (
-                <li>
+                <li key={ID}>
                   {this.state.statsData[ID].username} : RANK:{" "}
                   {this.state.statsData[ID].rank}
                   KILLS: {this.state.statsData[ID].kills}
@@ -32,6 +41,9 @@ class GameSummary extends Component {
               );
             })}
         </ul>
+        <Link to="/lobby">
+          <button onClick={this.onClick}>return to lobby</button>
+        </Link>
       </div>
     );
   }
@@ -47,6 +59,16 @@ class GameSummary extends Component {
       this.setState({ statsData: this.props.statsData });
       console.log("gamedata added to state");
     }
+  }
+
+  componentDidMount() {
+    this.props.socket.on("updateClientDetails", updatedDetails => {
+      this.props.updateClientDetails(updatedDetails);
+    });
+  }
+
+  componentWillUnmount() {
+    this.props.socket.off("updateClientDetails");
   }
 }
 

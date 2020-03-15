@@ -28,7 +28,7 @@ class App extends React.Component {
     return (
       <>
         <Header />
-        <audio src="./assets/battleMusic.wav" autoPlay="true" />
+        <audio src="./assets/battleMusic.wav" autoPlay={true} />
         <Router className="main">
           <Login
             path="/"
