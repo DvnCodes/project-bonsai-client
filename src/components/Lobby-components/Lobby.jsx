@@ -37,13 +37,13 @@ class Lobby extends Component {
           <h2>(2 peeps needed) Joining next game:</h2>
           <ul>
             {this.state.currentLobbyGuests.map(guest => {
-              if (guest.ready === true) {
-                return (
+              return (
+                guest.ready && (
                   <li key={guest.socket}>
                     <p>{guest.username}</p>
                   </li>
-                );
-              }
+                )
+              );
             })}
           </ul>
         </div>
@@ -90,10 +90,10 @@ class Lobby extends Component {
     });
     this.props.socket.on("lobbyGuestStateUpdate", userDetails => {
       this.setState(currentState => {
-        let lobbyGuestUpdate = currentState.currentLobbyGuests;
+        let lobbyGuestUpdate = [...currentState.currentLobbyGuests];
         if (userDetails.inLobby === false) {
           lobbyGuestUpdate = lobbyGuestUpdate.filter(user => {
-            return user.socket !== userDetails.socket;
+            return user.socket !== userDetails.clientID;
           });
         } else {
           lobbyGuestUpdate = lobbyGuestUpdate.map(user => {
@@ -102,6 +102,7 @@ class Lobby extends Component {
             } else return user;
           });
         }
+
         return { currentLobbyGuests: lobbyGuestUpdate };
       });
     });
@@ -128,6 +129,15 @@ class Lobby extends Component {
     });
   }
 
+  componentWillUnmount() {
+    this.props.socket.off("startGame");
+    this.props.socket.off("lobbyMessageBroadcast");
+    this.props.socket.off("playerJoinedLobbyNotification");
+    this.props.socket.off("currentLobbyGuests");
+    this.props.socket.off("updateClientDetails");
+    this.props.socket.off("lobbyGuestStateUpdate");
+    this.props.socket.off("newLobbyAddition");
+  }
   readyUp = () => {
     this.props.socket.emit("requestToJoinNextGame", "ready");
   };
