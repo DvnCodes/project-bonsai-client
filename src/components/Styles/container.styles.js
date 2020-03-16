@@ -5,6 +5,7 @@ export const HeaderContainer = styled.header`
   width: 100%;
   background-color: ${theme.b};
   color: ${theme.e};
+  z-index: 10;
 `;
 
 export const PrimaryContainer = styled.section`
@@ -68,4 +69,106 @@ export const MegaNotificationContainer = styled.aside`
     line-height: 1.3em;
     text-transform: uppercase;
   }
+`;
+
+export const GameBorderUI = styled.div`
+  .borderRight {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 7vw;
+    background-image: url("../../assets/right.png");
+    background-size: 100% auto;
+  }
+  .borderLeft {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 7vw;
+    background-image: url("./assets/left.png");
+    background-size: 100% auto;
+  }
+  .borderTop {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 14vh;
+    background-image: url("./assets/top.png");
+    background-size: auto 100%;
+  }
+  .borderBottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 13vh;
+    background-image: url("./assets/top.png");
+    background-size: auto 100%;
+    -moz-transform: scaleY(-1);
+    -o-transform: scaleY(-1);
+    -webkit-transform: scaleY(-1);
+    transform: scaleY(-1);
+    filter: FlipV;
+    -ms-filter: "FlipV";
+  }
+  .borderTopLeft {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    height: 26vh;
+    width: 13vw;
+    background-image: url("./assets/upperLeft.png");
+    background-size: 100% 100%;
+  }
+  .borderTopRight {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    height: 26vh;
+    width: 13vw;
+    background-image: url("./assets/upperRight.png");
+    background-size: 100% 100%;
+  }
+  .borderBottomLeft {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 26vh;
+    width: 13vw;
+    background-image: url("./assets/upperLeft.png");
+    background-size: 100% 100%;
+    -moz-transform: scaleY(-1);
+    -o-transform: scaleY(-1);
+    -webkit-transform: scaleY(-1);
+    transform: scaleY(-1);
+    filter: FlipV;
+    -ms-filter: "FlipV";
+  }
+  .borderBottomRight {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    height: 26vh;
+    width: 13vw;
+    background-image: url("./assets/upperRight.png");
+    background-size: 100% 100%;
+    -moz-transform: scaleY(-1);
+    -o-transform: scaleY(-1);
+    -webkit-transform: scaleY(-1);
+    transform: scaleY(-1);
+    filter: FlipV;
+    -ms-filter: "FlipV";
+  }
+`;
+
+export const PlayerStatsContainer = styled.aside`
+  position: absolute;
+  top: 0;
+  right: 4vw;
 `;

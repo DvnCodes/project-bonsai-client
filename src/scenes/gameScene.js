@@ -287,8 +287,8 @@ function showspell(self, player, sprite) {
 const gameSceneConfig = {
   type: Phaser.AUTO,
   parent: "gameWindow",
-  width: 800,
-  height: 600,
+  width: 1280,
+  height: 800,
   physics: {
     default: "arcade",
     arcade: {
