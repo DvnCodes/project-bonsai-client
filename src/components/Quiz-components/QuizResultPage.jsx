@@ -6,6 +6,17 @@ class QuizResultPage extends Component {
       <div>
         <h2>Results</h2>
         <p>You scored: {this.props.score}</p>
+        <ul>
+          {this.props.quizResults.map(result => {
+            const question = result[0];
+            const answer = result[1];
+            return (
+              <li>
+                {question.q} {question.correctA} {answer}
+              </li>
+            );
+          })}
+        </ul>
       </div>
     );
   }

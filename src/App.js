@@ -7,24 +7,67 @@ import Login from "./components/login-components/Login";
 import Lobby from "./components/Lobby-components/Lobby";
 import socketIOClient from "socket.io-client";
 import Gamepage from "./components/Gamepage-components/Gamepage";
-
-const socket = socketIOClient("localhost:8080");
+import GameSummary from "./components/Gamepage-components/GameSummary";
+const socket = socketIOClient("masters-of-maths.herokuapp.com");
 
 class App extends React.Component {
-  state = { loggedIn: false };
+  state = {
+    clientDetails: { loggedIn: false },
+    audioPlay: false,
+    selectedTrack: null,
+    statsData: undefined
+  };
+
+  updateClientDetails = clientDetailsFromServer => {
+    this.setState({ clientDetails: clientDetailsFromServer });
+  };
+
   render() {
     return (
-      <div className="App">
+      <>
         <Header />
-        <Router>
-          <Login path="/" socket={socket} />
-          <Lobby path="/lobby" socket={socket} />
-          <QuizPage path="/quiz" socket={socket} />
-          <Gamepage path="/game" socket={socket} />
+        <audio src="./assets/battleMusic.wav" autoPlay={true} />
+        <Router className="main">
+          <Login
+            path="/"
+            socket={socket}
+            updateClientDetails={this.updateClientDetails}
+            currentState={this.state.clientDetails}
+          />
+          <Lobby
+            path="/lobby"
+            socket={socket}
+            updateClientDetails={this.updateClientDetails}
+            currentState={this.state.clientDetails}
+          />
+          <QuizPage
+            path="/quiz"
+            socket={socket}
+            updateClientDetails={this.updateClientDetails}
+            currentState={this.state.clientDetails}
+          />
+          <Gamepage
+            path="/game"
+            socket={socket}
+            updateClientDetails={this.updateClientDetails}
+            updateStatsData={this.updateStatsData}
+            currentState={this.state.clientDetails}
+          />
+          <GameSummary
+            path="/summary"
+            statsData={this.state.statsData}
+            updateClientDetails={this.updateClientDetails}
+            currentState={this.state.clientDetails}
+            socket={socket}
+          />
         </Router>
-      </div>
+      </>
     );
   }
+
+  updateStatsData = statsData => {
+    this.setState({ statsData });
+  };
 }
 
 export { App, socket };
