@@ -91,6 +91,7 @@ class QuizPage extends Component {
             ) : (
               <>
                 <h2>Game Starting in:</h2>
+
                 <Timer seconds={10} timeUp={this.startGame} />
                 <QuizResultPage
                   score={this.state.score}

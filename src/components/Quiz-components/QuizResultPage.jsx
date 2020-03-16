@@ -5,6 +5,7 @@ class QuizResultPage extends Component {
   state = { health: 0 };
   render() {
     return (
+
       <QuizResultsContainer>
         <div id="results">
           <h2>Quiz Results</h2>
@@ -34,6 +35,7 @@ class QuizResultPage extends Component {
           </BarContainer>
         </div>
       </QuizResultsContainer>
+
     );
   }
 
