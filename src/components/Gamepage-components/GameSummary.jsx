@@ -26,7 +26,13 @@ class GameSummary extends Component {
 
         <ul>
           {Object.keys(this.state.statsData)
-            .sort((a, b) => (a.rank > b.rank ? 1 : -1))
+            .sort((a, b) => {
+              console.log(a);
+
+              return (
+                this.state.statsData[a].rank - this.state.statsData[b].rank
+              );
+            })
             .map(ID => {
               return (
                 <li key={ID}>

@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import { BarContainer } from "../Styles/container.styles";
 
 class QuizResultPage extends Component {
+  state = { health: 0 };
   render() {
     return (
       <div>
@@ -17,13 +19,23 @@ class QuizResultPage extends Component {
             );
           })}
         </ul>
+        <h2>Game Effects</h2>
+        <p>Health</p>
+        <BarContainer val={this.state.health} color={"red"}>
+          <div></div>
+        </BarContainer>
+        {/* <p>SpellPower</p>
+        <BarContainer val={this.state.health / 2 + "%"} color={"blue"}>
+          <div></div>
+        </BarContainer> */}
       </div>
     );
   }
 
   componentDidMount() {
-    // const socket = socketIOClient("localhost:8080");
-    // socket.emit("set health", this.props.score);
+    setInterval(() => {
+      this.setState({ health: (this.props.score + 1) * 5 });
+    }, 3000);
   }
 }
 
