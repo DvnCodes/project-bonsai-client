@@ -108,3 +108,25 @@ export const BarContainer = styled.section`
   box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25),
     inset 0 1px rgba(255, 255, 255, 0.1);
 `;
+
+export const QuizResultsContainer = styled.section`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  grid-template-areas: "left right";
+  #results {
+    grid-area: left;
+    list-style: none;
+    justify-self: center;
+  }
+  #gameEffects {
+    grid-area: right;
+    justify-self: center;
+  }
+  #correct {
+    color: green;
+  }
+  #incorrect {
+    color: red;
+  }
+`;

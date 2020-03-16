@@ -74,7 +74,7 @@ class QuizPage extends Component {
             {" "}
             {!quizOver ? (
               <>
-                <Timer seconds={20} timeUp={this.quizOver} />
+                <Timer seconds={5} timeUp={this.quizOver} />
                 <p>Score: {score}</p>
                 <h2>{questions[currentQuestion].q} = ?</h2>
                 <ul>
