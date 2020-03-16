@@ -76,7 +76,7 @@ class QuizPage extends Component {
               <>
                 <Timer seconds={20} timeUp={this.quizOver} />
                 <p>Score: {score}</p>
-                <h2>{questions[currentQuestion].q} = ?</h2>
+                <h2>{questions[currentQuestion].q}?</h2>
                 <ul>
                   {answers.map((answer, i) => {
                     return (
