@@ -1,8 +1,5 @@
 import Phaser from "phaser";
 
-// const passSocketRef = socket => {
-//   clientSocket = socket;
-// };
 import { socket } from "../App";
 
 let dolly;
@@ -11,27 +8,29 @@ let spacebar;
 let qu;
 let wu;
 let ee;
+let listOfGameListeners = {};
 
 function preload() {
-  this.load.image("genie", "assets/10.png");
-  this.load.image("baddie", "assets/13.png");
+  // console.log("hello");
   this.load.image("star", "assets/star.png");
   this.load.image("tiles", "assets/rogue.png");
   this.load.tilemapTiledJSON("map", "assets/mapTest.json");
   this.load.image("fireball", "assets/spell.png");
   this.load.image("life2", "assets/2.png");
   this.load.image("life1", "assets/1.png");
-  // this.load.image("life0", "assets/0.png");
   this.load.image("life3", "assets/3.png");
   this.load.image("firering", "assets/firering.png");
   this.load.image("dead", "assets/bomb.png");
   this.load.image("green", "assets/green.png");
   this.load.image("red", "assets/red.png");
+  this.load.image("genie", "assets/10.png");
+  this.load.image("baddie", "assets/13.png");
 }
 
 function create() {
+  // console.log("client creating game scene");
+  listOfGameListeners = {};
   socket.emit("gameLoaded", socket.id);
-
   const self = this;
   this.socket = socket;
   this.players = this.add.group();
@@ -43,7 +42,7 @@ function create() {
   this.cameras.main.startFollow(dolly, true, 0.3, 0.3);
   this.cameras.main.setZoom(1);
 
-  this.socket.on("currentPlayers", players => {
+  const currentPlayers = this.socket.on("currentPlayers", players => {
     Object.keys(players).forEach(id => {
       if (players[id].playerID === self.socket.id) {
         displayPlayers(self, players[id], "genie");
@@ -52,37 +51,52 @@ function create() {
       }
     });
   });
+  listOfGameListeners.currentPlayers = currentPlayers;
 
-  this.socket.on("newPlayer", playerInfo => {
+  const newPlayer = this.socket.on("newPlayer", playerInfo => {
     displayPlayers(self, playerInfo, "baddie");
   });
-  this.socket.on("newAttack", playerInfo => {
+  listOfGameListeners.newPlayer = newPlayer;
+
+  const newAttack = this.socket.on("newAttack", playerInfo => {
     displayAttacks(self, playerInfo);
   });
+  listOfGameListeners.newAttack = newAttack;
 
-  this.socket.on("disconnect", playerID => {
+  const disconnect = this.socket.on("disconnect", playerID => {
     self.players.getChildren().forEach(player => {
       if (playerID === player.playerID) {
         player.destroy();
       }
     });
   });
+  listOfGameListeners.disconnect = disconnect;
 
-  this.socket.on("attackEnded", attackID => {
+  const showGameSummary = this.socket.on("showGameSummary", () => {
+    Object.keys(listOfGameListeners).forEach(listenerName => {
+      this.socket.off(listenerName, listOfGameListeners[listenerName]);
+    });
+    this.sys.game.destroy(true);
+  });
+  listOfGameListeners.showGameSummary = showGameSummary;
+
+  const attackEnded = this.socket.on("attackEnded", attackID => {
     self.attacks.getChildren().forEach(attack => {
       if (attackID === attack.attackID) {
         attack.destroy();
       }
     });
   });
+  listOfGameListeners.attackEnded = attackEnded;
 
-  this.socket.on("spellAdded", spellInfo => {
-    console.log(socket.id);
-    console.log("thingthing", spellInfo.thing);
+  const spellAdded = this.socket.on("spellAdded", spellInfo => {
+    // console.log(socket.id);
+    // console.log("thingthing", spellInfo.thing);
     showspell(self, spellInfo.player, spellInfo.thing);
   });
+  listOfGameListeners.spellAdded = spellAdded;
 
-  this.socket.on("playerUpdates", players => {
+  const playerUpdates = this.socket.on("playerUpdates", players => {
     if (players[this.socket.id] !== undefined) {
       if (life === undefined) {
         life = players[this.socket.id].life;
@@ -120,8 +134,9 @@ function create() {
     if (players[this.socket.id])
       dolly.setPosition(players[this.socket.id].x, players[this.socket.id].y);
   });
+  listOfGameListeners.playerUpdates = playerUpdates;
 
-  this.socket.on("spellUpdates", data => {
+  const spellUpdates = this.socket.on("spellUpdates", data => {
     self.spells.getChildren().forEach(spell => {
       if (data.spells[spell.spellID] === undefined) {
         spell.destroy();
@@ -135,8 +150,9 @@ function create() {
       });
     });
   });
+  listOfGameListeners.spellUpdates = spellUpdates;
 
-  this.socket.on("attackUpdates", attacks => {
+  const attackUpdates = this.socket.on("attackUpdates", attacks => {
     Object.keys(attacks).forEach(id => {
       self.attacks.getChildren().forEach(attack => {
         if (attacks[id].attackID === attack.attackID) {
@@ -150,8 +166,9 @@ function create() {
       }
     });
   });
+  listOfGameListeners.attackUpdates = attackUpdates;
 
-  this.socket.on("onDie", playerID => {
+  const onDie = this.socket.on("onDie", playerID => {
     self.players.getChildren().forEach(player => {
       if (player.playerID === playerID) {
         self.add.image(player.x, player.y, "dead");
@@ -159,6 +176,7 @@ function create() {
       }
     });
   });
+  listOfGameListeners.onDie = onDie;
 
   this.cursors = this.input.keyboard.createCursorKeys();
   spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -220,11 +238,9 @@ function update() {
   }
 
   if (Phaser.Input.Keyboard.JustDown(spacebar)) {
-    console.log("SHOOTING!!!");
     this.socket.emit("attackInput", "hi");
   }
   if (Phaser.Input.Keyboard.JustDown(qu)) {
-    console.log("SHOOTING!!!");
     this.socket.emit("attackInput", "hi");
   }
   if (Phaser.Input.Keyboard.JustDown(wu)) {

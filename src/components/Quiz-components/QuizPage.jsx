@@ -23,12 +23,18 @@ class QuizPage extends Component {
   };
 
   componentDidMount() {
-    console.log("mounting");
     this.props.socket.emit("sendQuizQuestions");
     this.props.socket.on("beginQuiz", (questionsList, finishTime) => {
-      console.log(questionsList);
       this.setState({ questions: questionsList, quizFinishTime: finishTime });
     });
+    this.props.socket.on("updateClientDetails", updatedDetails => {
+      this.props.updateClientDetails(updatedDetails);
+    });
+  }
+
+  componentWillUnmount() {
+    this.props.socket.off("beginQuiz");
+    this.props.socket.off("updateClientDetails");
   }
   render() {
     const {
@@ -84,7 +90,7 @@ class QuizPage extends Component {
             ) : (
               <>
                 <h2>Game Starting in:</h2>
-                <Timer seconds={50} timeUp={this.startGame} />
+                <Timer seconds={5} timeUp={this.startGame} />
                 <QuizResultPage
                   score={this.state.score}
                   quizResults={this.state.quizResults}
@@ -145,7 +151,11 @@ class QuizPage extends Component {
   };
   quizOver = () => {
     this.setState({ quizOver: true, answeredAll: true });
-    this.props.socket.emit("clientGameReady", this.state.score);
+    this.props.socket.emit(
+      "clientGameReady",
+      this.state.score,
+      this.props.currentState.username
+    );
   };
   startGame = () => {
     this.setState({ toGame: true });
