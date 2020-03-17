@@ -8,8 +8,11 @@ import Lobby from "./components/Lobby-components/Lobby";
 import socketIOClient from "socket.io-client";
 import Gamepage from "./components/Gamepage-components/Gamepage";
 import GameSummary from "./components/Gamepage-components/GameSummary";
-const socket = socketIOClient("localhost:8080");
+
 // const socket = socketIOClient("masters-of-maths.herokuapp.com");
+const socket = socketIOClient("localhost:8080");
+
+
 
 class App extends React.Component {
   state = {
