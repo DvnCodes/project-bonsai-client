@@ -8,26 +8,42 @@ import Lobby from "./components/Lobby-components/Lobby";
 import socketIOClient from "socket.io-client";
 import Gamepage from "./components/Gamepage-components/Gamepage";
 import GameSummary from "./components/Gamepage-components/GameSummary";
+
 // const socket = socketIOClient("masters-of-maths.herokuapp.com");
 const socket = socketIOClient("localhost:8080");
+
+
 
 class App extends React.Component {
   state = {
     clientDetails: { loggedIn: false },
     audioPlay: false,
     selectedTrack: null,
-    statsData: undefined
+    statsData: undefined,
+    audioMute: false
   };
 
   updateClientDetails = clientDetailsFromServer => {
     this.setState({ clientDetails: clientDetailsFromServer });
   };
 
+  toggleAudioMute = () => {
+    this.setState(currentState => {
+      return {
+        audioMute: !currentState.audioMute
+      };
+    });
+  };
+
   render() {
     return (
       <>
-        <Header />
-        <audio src="./assets/battleMusic.wav" autoPlay={true} />
+        <Header toggleAudio={this.toggleAudioMute} />
+        <audio
+          src="./assets/battleMusic.wav"
+          autoPlay={true}
+          muted={this.state.audioMute}
+        />
         <Router className="main">
           <Login
             path="/"

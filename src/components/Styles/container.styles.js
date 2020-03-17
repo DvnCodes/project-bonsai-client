@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import theme from "./themes";
 
 export const HeaderContainer = styled.header`
@@ -232,4 +232,16 @@ export const QuizResultsContainer = styled.section`
   #incorrect {
     color: red;
   }
+`;
+
+export const WallBG = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-image: url("./assets/wallTexture.png");
+  background-size: 20%;
+  background-repeat: repeat;
+  z-index: 1;
 `;

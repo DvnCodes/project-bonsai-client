@@ -2,9 +2,10 @@ import React from "react";
 import { Link } from "@reach/router";
 import {
   PrimaryContainer,
-  MegaNotificationContainer
+  MegaNotificationContainer,
+  WallBG
 } from "../Styles/container.styles";
-import { StyledButton } from "../Styles/ui.styles";
+import { StyledButton, LoginForm } from "../Styles/ui.styles";
 
 class Login extends React.Component {
   state = {
@@ -16,8 +17,9 @@ class Login extends React.Component {
     const { username } = this.state;
     return (
       <PrimaryContainer>
+        <WallBG></WallBG>
         {this.state.loggedIn === false && (
-          <form onSubmit={this.handleSubmit}>
+          <LoginForm onSubmit={this.handleSubmit}>
             <input
               className="login-name-input"
               type="text"
@@ -25,6 +27,8 @@ class Login extends React.Component {
               value={username}
               name="username"
               onChange={this.handleInput}
+              maxLength={15}
+              required
             ></input>
             {/* <input
               className="login-password-input"
@@ -36,7 +40,7 @@ class Login extends React.Component {
             ></input> */}
 
             <StyledButton>log in</StyledButton>
-          </form>
+          </LoginForm>
         )}
         {this.state.loggedIn === true && (
           <>
