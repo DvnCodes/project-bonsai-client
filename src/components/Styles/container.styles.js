@@ -271,3 +271,7 @@ export const WallBG = styled.div`
   background-repeat: repeat;
   z-index: 1;
 `;
+
+export const InstructionsBlock = styled.div`
+  z-index: 3;
+`;

@@ -3,7 +3,8 @@ import { Link } from "@reach/router";
 import {
   PrimaryContainer,
   MegaNotificationContainer,
-  WallBG
+  WallBG,
+  InstructionsBlock
 } from "../Styles/container.styles";
 import { StyledButton, LoginForm } from "../Styles/ui.styles";
 
@@ -43,12 +44,12 @@ class Login extends React.Component {
           </LoginForm>
         )}
         {this.state.loggedIn === true && (
-          <>
-            <p> Login Authorised..</p>
+          <InstructionsBlock>
+            <h2> Login Authorised..</h2>
             <Link to="/lobby">
-              <button>JOIN LOBBY</button>{" "}
+              <StyledButton>JOIN LOBBY</StyledButton>{" "}
             </Link>
-          </>
+          </InstructionsBlock>
         )}
       </PrimaryContainer>
     );
