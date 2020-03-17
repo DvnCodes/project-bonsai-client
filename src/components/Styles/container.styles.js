@@ -275,3 +275,147 @@ export const WallBG = styled.div`
 export const InstructionsBlock = styled.div`
   z-index: 3;
 `;
+
+export const LobbyContainer = styled.section`
+  flex-grow: 1;
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: ${theme.e};
+  z-index: 1;
+  width: 90%;
+  height: 70vh;
+  box-shadow: inset -10px -10px 0px 0px rgba(0, 0, 0, 0.3);
+  position: relative;
+  &:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: content-box;
+    top: -10px;
+    left: 0;
+    border-top: 10px black solid;
+    border-bottom: 10px black solid;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: content-box;
+    top: 0;
+    left: -10px;
+    border-left: 10px black solid;
+    border-right: 10px black solid;
+  }
+
+  .LobbyControls {
+    height: 95%;
+    width: 25%;
+    max-width: 500px;
+    flex-grow: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .LobbyMessaging {
+    flex-grow: 1;
+    height: 95%;
+    z-index: 3;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  h2 {
+    font-size: 16px;
+  }
+`;
+
+export const PlayerList = styled.ul`
+  list-style: none;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding: 0;
+
+  li {
+    background-color: ${theme.d};
+    font-size: 16px;
+    text-transform: uppercase;
+    padding: 0px 5px;
+    margin: 10px 10px;
+    position: relative;
+    &:before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      box-sizing: content-box;
+      top: -3px;
+      left: 0;
+      border-top: 3px ${theme.d} solid;
+      border-bottom: 3px ${theme.d} solid;
+    }
+
+    &:after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      box-sizing: content-box;
+      top: 0;
+      left: -3px;
+      border-left: 3px ${theme.d} solid;
+      border-right: 3px ${theme.d} solid;
+    }
+  }
+`;
+
+export const ChatMessageHistory = styled.ul`
+  height: 80%;
+  width: 100%;
+  list-style: none;
+  padding: 5px 5px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+
+  li {
+    background: ${theme.c};
+    width: 90%;
+    margin: 20px;
+    font-size: 14px;
+    text-align: left;
+    padding: 5px 10px;
+    position: relative;
+    &:before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      box-sizing: content-box;
+      top: -5px;
+      left: 0;
+      border-top: 5px ${theme.c} solid;
+      border-bottom: 5px ${theme.c} solid;
+    }
+
+    &:after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      box-sizing: content-box;
+      top: 0;
+      left: -5px;
+      border-left: 5px ${theme.c} solid;
+      border-right: 5px ${theme.c} solid;
+    }
+  }
+`;

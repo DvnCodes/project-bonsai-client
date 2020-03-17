@@ -55,6 +55,19 @@ export const StyledButton = styled.button`
       right: 10px;
       top: 5px;
     `}
+
+  ${props =>
+    props.joinGame &&
+    css`
+      height: 7em;
+      margin-top: auto;
+      margin-left: 3px;
+      margin-right: 3px;
+      margin-bottom: 3px;
+      background-color: ${theme.a};
+      justify-self: flex-end;
+      font-size: 14px;
+    `}
 `;
 
 export const LoginForm = styled.form`
@@ -68,6 +81,22 @@ export const LoginForm = styled.form`
     border: solid black 3px;
     position: relative;
     font-size: 16px;
+  }
+`;
+
+export const ChatForm = styled.form`
+  width: 95%;
+  justify-self: flex-end;
+  display: flex;
+  input {
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: solid black 3px;
+    font-size: 16px;
+    flex-grow: 1;
+  }
+  button {
+    background-color: ${theme.b};
   }
 `;
 
