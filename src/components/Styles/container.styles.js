@@ -5,6 +5,7 @@ export const HeaderContainer = styled.header`
   width: 100%;
   background-color: ${theme.b};
   color: ${theme.e};
+  z-index: 10;
 `;
 
 export const PrimaryContainer = styled.section`
@@ -67,5 +68,168 @@ export const MegaNotificationContainer = styled.aside`
     letter-spacing: 10px;
     line-height: 1.3em;
     text-transform: uppercase;
+  }
+`;
+
+export const GameBorderUI = styled.div`
+  .borderRight {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 7vw;
+    background-image: url("../../assets/right.png");
+    background-size: 100% auto;
+  }
+  .borderLeft {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 7vw;
+    background-image: url("./assets/left.png");
+    background-size: 100% auto;
+  }
+  .borderTop {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 14vh;
+    background-image: url("./assets/top.png");
+    background-size: auto 100%;
+  }
+  .borderBottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 13vh;
+    background-image: url("./assets/top.png");
+    background-size: auto 100%;
+    -moz-transform: scaleY(-1);
+    -o-transform: scaleY(-1);
+    -webkit-transform: scaleY(-1);
+    transform: scaleY(-1);
+    filter: FlipV;
+    -ms-filter: "FlipV";
+  }
+  .borderTopLeft {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    height: 26vh;
+    width: 13vw;
+    background-image: url("./assets/upperLeft.png");
+    background-size: 100% 100%;
+  }
+  .borderTopRight {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    height: 26vh;
+    width: 13vw;
+    background-image: url("./assets/upperRight.png");
+    background-size: 100% 100%;
+  }
+  .borderBottomLeft {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 26vh;
+    width: 13vw;
+    background-image: url("./assets/upperLeft.png");
+    background-size: 100% 100%;
+    -moz-transform: scaleY(-1);
+    -o-transform: scaleY(-1);
+    -webkit-transform: scaleY(-1);
+    transform: scaleY(-1);
+    filter: FlipV;
+    -ms-filter: "FlipV";
+  }
+  .borderBottomRight {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    height: 26vh;
+    width: 13vw;
+    background-image: url("./assets/upperRight.png");
+    background-size: 100% 100%;
+    -moz-transform: scaleY(-1);
+    -o-transform: scaleY(-1);
+    -webkit-transform: scaleY(-1);
+    transform: scaleY(-1);
+    filter: FlipV;
+    -ms-filter: "FlipV";
+  }
+`;
+
+export const PlayerStatsContainer = styled.aside`
+  position: absolute;
+  top: 0;
+  right: 4vw;
+`;
+
+export const BarContainer = styled.section`
+  width: ${props => props.val}%;
+  background-color: ${props => props.color};
+  height: 30px;
+  border-radius: 4px;
+  background-image: -webkit-linear-gradient(
+    top,
+    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.05)
+  );
+  background-image: -moz-linear-gradient(
+    top,
+    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.05)
+  );
+  background-image: -o-linear-gradient(
+    top,
+    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.05)
+  );
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.05)
+  );
+  -webkit-transition: 2s linear;
+  -moz-transition: 2s linear;
+  -o-transition: 2s linear;
+  transition: 2s linear;
+  -webkit-transition-property: width, background-color;
+  -moz-transition-property: width, background-color;
+  -o-transition-property: width, background-color;
+  transition-property: width, background-color;
+  -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25),
+    inset 0 1px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25),
+    inset 0 1px rgba(255, 255, 255, 0.1);
+`;
+
+export const QuizResultsContainer = styled.section`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  grid-template-areas: "left right";
+  #results {
+    grid-area: left;
+    list-style: none;
+    justify-self: center;
+  }
+  #gameEffects {
+    grid-area: right;
+    justify-self: center;
+  }
+  #correct {
+    color: green;
+  }
+  #incorrect {
+    color: red;
   }
 `;

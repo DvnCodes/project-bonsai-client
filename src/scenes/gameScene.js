@@ -37,6 +37,7 @@ function create() {
   this.attacks = this.add.group();
   this.stats = this.add.group();
   this.spells = this.add.group();
+  this.names = this.add.group();
   dolly = this.physics.add.image(100, 100, "star");
   this.cameras.main.setDeadzone(10, 10);
   this.cameras.main.startFollow(dolly, true, 0.3, 0.3);
@@ -48,6 +49,7 @@ function create() {
         displayPlayers(self, players[id], "genie");
       } else {
         displayPlayers(self, players[id], "baddie");
+        displayName(self, players[id]);
       }
     });
   });
@@ -116,18 +118,35 @@ function create() {
         });
       }
     }
+
     Object.keys(players).forEach(id => {
+      let allNames = self.names.getChildren().filter(name => {
+        return name.playerID === players[id].playerID;
+      });
+      if (allNames.length === 0 && players[id].playerID !== socket.id) {
+        displayName(self, players[id]);
+      }
+
       self.players.getChildren().forEach(player => {
         if (players[id].playerID === player.playerID) {
           player.setRotation(players[id].rotation);
           player.setPosition(players[id].x, players[id].y);
         }
-      });
-      self.players.getChildren().forEach(player => {
-        if (players[player.playerID] === undefined) {
-          player.destroy();
-          console.log("destroyed");
-        }
+        self.names.getChildren().forEach(name => {
+          if (players[id].playerID === name.playerID) {
+            name.setPosition(
+              players[id].x - name.width / 2,
+              players[id].y - 50
+            );
+          }
+        });
+
+        self.players.getChildren().forEach(player => {
+          if (players[player.playerID] === undefined) {
+            player.destroy();
+            console.log("destroyed");
+          }
+        });
       });
     });
 
@@ -166,6 +185,7 @@ function create() {
       }
     });
   });
+
   listOfGameListeners.attackUpdates = attackUpdates;
 
   const onDie = this.socket.on("onDie", playerID => {
@@ -176,6 +196,7 @@ function create() {
       }
     });
   });
+
   listOfGameListeners.onDie = onDie;
 
   this.cursors = this.input.keyboard.createCursorKeys();
@@ -276,6 +297,16 @@ function displayLife(self, player) {
   self.stats.add(myLife);
 }
 
+function displayName(self, player) {
+  let style = { font: "12px Arial", fill: "#ff0044", align: "center" };
+  console.log(player.username);
+  let text = `${player.username} ${player.power}`;
+  const playerName = self.add.text(player.x, player.y - 40, text, style);
+  playerName.playerID = player.playerID;
+  // playerName.anchor.setTo(0.5);
+  self.names.add(playerName);
+}
+
 function showspell(self, player, sprite) {
   const myspell = self.add
     .sprite(player.x, player.y, sprite)
@@ -287,8 +318,8 @@ function showspell(self, player, sprite) {
 const gameSceneConfig = {
   type: Phaser.AUTO,
   parent: "gameWindow",
-  width: 800,
-  height: 600,
+  width: 1280,
+  height: 800,
   physics: {
     default: "arcade",
     arcade: {
