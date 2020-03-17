@@ -143,10 +143,7 @@ class QuizPage extends Component {
         }, 700)
       );
     }
-    if (
-      parseInt(answer) !== questions[currentQuestion].correctA &&
-      this.state.score > 1
-    ) {
+    if (parseInt(answer) !== questions[currentQuestion].correctA) {
       this.setState(
         {
           correct: false,
@@ -157,7 +154,8 @@ class QuizPage extends Component {
           setTimeout(() => {
             this.setState(currentState => {
               const nextQuestion = currentState.currentQuestion + 1;
-              const newScore = currentState.score - 1;
+              const newScore =
+                this.state.score === 0 ? 0 : currentState.score - 1;
               const newResults = [...currentState.quizResults];
               newResults.push([
                 this.state.questions[currentQuestion],
