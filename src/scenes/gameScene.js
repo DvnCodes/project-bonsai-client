@@ -41,6 +41,10 @@ function preload() {
     frameWidth: 18,
     frameHeight: 22
   });
+  this.load.spritesheet("fireBallSheet", "assets/fireBallSheet.png", {
+    frameWidth: 66,
+    frameHeight: 34
+  });
 }
 
 function create() {
@@ -91,6 +95,14 @@ function create() {
     key: "runE",
     frames: this.anims.generateFrameNumbers("necRunSheet", {
       frames: [0, 1, 2, 3]
+    }),
+    frameRate: 10,
+    repeat: -1
+  });
+  this.anims.create({
+    key: "fireBall",
+    frames: this.anims.generateFrameNumbers("fireBallSheet", {
+      frames: [0, 1, 2, 3, 4]
     }),
     frameRate: 10,
     repeat: -1
@@ -152,21 +164,24 @@ function create() {
   listOfGameListeners.spellAdded = spellAdded;
 
   const playerUpdates = this.socket.on("playerUpdates", players => {
-    if (players[this.socket.id] !== undefined) {
+    if (players[this.socket.id]) {
       if (life === undefined) {
         life = players[this.socket.id].life;
-        displayLife(self, players[this.socket.id]);
+        // displayLife(self, players[this.socket.id]);
       } else if (players[this.socket.id].life !== life) {
         self.stats.getChildren().forEach(stat => {
           stat.destroy();
         });
         life = players[this.socket.id].life;
-        displayLife(self, players[this.socket.id]);
+
+        // displayLife(self, players[this.socket.id]);
       } else {
-        self.stats.getChildren().forEach(stat => {
-          stat.setPosition(
-            players[this.socket.id].x,
-            players[this.socket.id].y + 100
+        self.stats.getChildren().forEach(lifebar => {
+          //this actually creates a duplicate, non responding lifebar set off the map
+          // couldnt keep it working without this, see if you can fix
+          lifebar.setPosition(
+            players[lifebar.lifebarID].x,
+            players[lifebar.lifebarID].y + 1000
           );
         });
       }
@@ -185,8 +200,10 @@ function create() {
           player.setRotation(players[id].rotation);
           player.setPosition(players[id].x, players[id].y);
 
-          //this is only for enemy players
+          // if the player is an enemy player
           if (player.playerID !== socket.id) {
+            //display life for enemy players
+            displayLife(self, players[player.playerID]);
             //if players x position is bigger than it was last update
             if (prevXs[player.playerID] > players[id].x) {
               player.flipX = true;
@@ -373,25 +390,25 @@ function displayPlayers(self, playerInfo, sprite) {
 }
 function displayAttacks(self, playerInfo) {
   const attack = self.add
-    .sprite(playerInfo.x, playerInfo.y, "fireball")
+    .sprite(playerInfo.x, playerInfo.y, "fireBallSheet")
     .setOrigin(0.5, 0.5)
-    .setDisplaySize(50, 50);
+    .setDisplaySize(66, 34);
+  attack.anims.play("fireBall", true);
 
   attack.attackID = playerInfo.attackID;
   self.attacks.add(attack);
 }
 
 function displayLife(self, player) {
-  const myLife = self.add
-    .sprite(player.x, player.y + 80, "green")
+  const lifebars = self.add
+    .sprite(player.x, player.y + 40, "green")
     .setDisplaySize(player.life * 10, 10);
-  myLife.statID = player.playerID;
-  self.stats.add(myLife);
+  lifebars.lifebarID = player.playerID;
+  self.stats.add(lifebars);
 }
 
 function displayName(self, player) {
   let style = { font: "12px Arial", fill: "#ff0044", align: "center" };
-  console.log(player.username);
   let text = `${player.username} ${player.power}`;
   const playerName = self.add.text(player.x, player.y - 40, text, style);
   playerName.playerID = player.playerID;
