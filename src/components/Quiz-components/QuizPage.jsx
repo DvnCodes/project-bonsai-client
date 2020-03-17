@@ -74,6 +74,7 @@ class QuizPage extends Component {
             {!quizOver ? (
               <>
                 <Timer seconds={30} timeUp={this.quizOver} />
+
                 <p>Score: {score}</p>
                 <h2>{questions[currentQuestion].q}?</h2>
                 <ol>
@@ -107,7 +108,7 @@ class QuizPage extends Component {
               <>
                 <h2>Game Starting in:</h2>
 
-                <Timer seconds={10} timeUp={this.startGame} />
+                <Timer seconds={1} timeUp={this.startGame} />
                 <QuizResultPage
                   score={this.state.score}
                   quizResults={this.state.quizResults}
