@@ -25,6 +25,8 @@ function preload() {
   this.load.image("red", "assets/red.png");
   this.load.image("genie", "assets/10.png");
   this.load.image("baddie", "assets/13.png");
+  this.load.image("speed", "assets/firering.png");
+  this.load.bitmapFont("myfont", "assets/font.png", "assets/font.fnt");
 }
 
 function create() {
@@ -36,8 +38,10 @@ function create() {
   this.players = this.add.group();
   this.attacks = this.add.group();
   this.stats = this.add.group();
-  this.spells = this.add.group();
+  this.firering = this.add.group();
+  this.speed = this.add.group();
   this.names = this.add.group();
+  this.lives = this.add.group();
   dolly = this.physics.add.image(100, 100, "star");
   this.cameras.main.setDeadzone(10, 10);
   this.cameras.main.startFollow(dolly, true, 0.3, 0.3);
@@ -50,6 +54,7 @@ function create() {
       } else {
         displayPlayers(self, players[id], "baddie");
         displayName(self, players[id]);
+        displayEnemyLife(self, players[id]);
       }
     });
   });
@@ -91,14 +96,45 @@ function create() {
   });
   listOfGameListeners.attackEnded = attackEnded;
 
-  const spellAdded = this.socket.on("spellAdded", spellInfo => {
+  const spellAddedSpeed = this.socket.on("spellAddedSpeed", playerInfo => {
+    console.log("addspeed");
     // console.log(socket.id);
-    // console.log("thingthing", spellInfo.thing);
-    showspell(self, spellInfo.player, spellInfo.thing);
+    // console.log("thingthing", playerInfo.thing);
+    showspeed(self, playerInfo, "speed");
   });
-  listOfGameListeners.spellAdded = spellAdded;
+  listOfGameListeners.spellAddedSpeed = spellAddedSpeed;
+
+  const spellAddedFire = this.socket.on("spellAddedFire", playerInfo => {
+    console.log("addfire");
+    // console.log(socket.id);
+    // console.log("thingthing", playerInfo.thing);
+    showfire(self, playerInfo, "firering");
+  });
+  listOfGameListeners.spellAddedFire = spellAddedFire;
 
   const playerUpdates = this.socket.on("playerUpdates", players => {
+    self.firering.getChildren().forEach(firering => {
+      if (players[firering.spellID].spellactive.firering === false) {
+        firering.destroy();
+      } else {
+        firering.setPosition(
+          players[firering.playersID].x,
+          players[firering.playersID].y
+        );
+      }
+    });
+
+    self.speed.getChildren().forEach(speed => {
+      if (players[speed.spellID].spellactive.speed === false) {
+        speed.destroy();
+      } else {
+        speed.setPosition(
+          players[speed.playersID].x,
+          players[speed.playersID].y
+        );
+      }
+    });
+
     if (players[this.socket.id] !== undefined) {
       if (life === undefined) {
         life = players[this.socket.id].life;
@@ -126,6 +162,12 @@ function create() {
       if (allNames.length === 0 && players[id].playerID !== socket.id) {
         displayName(self, players[id]);
       }
+      let allLives = self.lives.getChildren().filter(life => {
+        return life.playerID === players[id].playerID;
+      });
+      if (allLives.length === 0 && players[id].playerID !== socket.id) {
+        displayEnemyLife(self, players[id]);
+      }
 
       self.players.getChildren().forEach(player => {
         if (players[id].playerID === player.playerID) {
@@ -136,7 +178,15 @@ function create() {
           if (players[id].playerID === name.playerID) {
             name.setPosition(
               players[id].x - name.width / 2,
-              players[id].y - 50
+              players[id].y - 40
+            );
+          }
+        });
+        self.lives.getChildren().forEach(life => {
+          if (players[id].playerID === life.playerID) {
+            life.setPosition(
+              players[id].x - life.width / 2,
+              players[id].y + 40
             );
           }
         });
@@ -155,21 +205,39 @@ function create() {
   });
   listOfGameListeners.playerUpdates = playerUpdates;
 
-  const spellUpdates = this.socket.on("spellUpdates", data => {
-    self.spells.getChildren().forEach(spell => {
-      if (data.spells[spell.spellID] === undefined) {
-        spell.destroy();
-      }
-    });
-    Object.keys(data.spells).forEach(id => {
-      self.spells.getChildren().forEach(spell => {
-        if (spell.spellID === id) {
-          spell.setPosition(data.players[id].x, data.players[id].y);
-        }
-      });
-    });
-  });
-  listOfGameListeners.spellUpdates = spellUpdates;
+  // const spellUpdates = this.socket.on(
+  //   "spellUpdates",
+  //   playerClientUpdateObject => {
+  //     self.firering.getChildren().forEach(spell => {
+  //       if (firering[spell.spellID] === undefined) {
+  //         spell.destroy();
+  //       }
+  //     });
+
+  //     Object.keys(firering).forEach(id => {
+  //       self.firering.getChildren().forEach(spell => {
+  //         if (spell.spellID === id) {
+  //           spell.setPosition(firering.players[id].x, firering.players[id].y);
+  //         }
+  //       });
+  //     });
+
+  //     self.speed.getChildren().forEach(spell => {
+  //       if (speed[spell.spellID] === undefined) {
+  //         spell.destroy();
+  //       }
+  //     });
+
+  //     Object.keys(speed).forEach(id => {
+  //       self.firering.getChildren().forEach(spell => {
+  //         if (spell.spellID === id) {
+  //           spell.setPosition(spell.players[id].x, spell.players[id].y);
+  //         }
+  //       });
+  //     });
+  //   }
+  // );
+  // listOfGameListeners.spellUpdates = spellUpdates;
 
   const attackUpdates = this.socket.on("attackUpdates", attacks => {
     Object.keys(attacks).forEach(id => {
@@ -266,7 +334,11 @@ function update() {
   }
   if (Phaser.Input.Keyboard.JustDown(wu)) {
     console.log("something!!!");
-    this.socket.emit("spell", "firering");
+    this.socket.emit("firering");
+  }
+  if (Phaser.Input.Keyboard.JustDown(ee)) {
+    console.log("speed!!!");
+    this.socket.emit("speed");
   }
 }
 
@@ -298,21 +370,51 @@ function displayLife(self, player) {
 }
 
 function displayName(self, player) {
-  let style = { font: "12px Arial", fill: "#ff0044", align: "center" };
-  console.log(player.username);
-  let text = `${player.username} ${player.power}`;
-  const playerName = self.add.text(player.x, player.y - 40, text, style);
+  // let style = { font: "12px Arial", fill: "#ff0044", align: "center" };
+  let text = `${player.username} ${player.playerLevel} `;
+  const playerName = self.add.bitmapText(
+    player.x,
+    player.y - 40,
+    "myfont",
+    text,
+    15
+  );
   playerName.playerID = player.playerID;
   // playerName.anchor.setTo(0.5);
   self.names.add(playerName);
 }
 
-function showspell(self, player, sprite) {
-  const myspell = self.add
-    .sprite(player.x, player.y, sprite)
+function displayEnemyLife(self, player) {
+  // let style = { font: "12px Arial", fill: "#ff0044", align: "center" };
+  let text = `${player.life}`;
+  const playerLife = self.add.bitmapText(
+    player.x,
+    player.y + 40,
+    "myfont",
+    text,
+    15
+  );
+  playerLife.playerID = player.playerID;
+  // playerName.anchor.setTo(0.5);
+  self.lives.add(playerLife);
+}
+
+function showfire(self, player) {
+  console.log(player);
+  let myfire = self.add
+    .sprite(player.x, player.y, "firering")
     .setDisplaySize(125, 125);
-  myspell.spellID = player.playerID;
-  self.spells.add(myspell);
+  myfire.spellID = player.playerID;
+  self.firering.add(myfire);
+}
+
+function showspeed(self, player) {
+  console.log(player);
+  let myspeed = self.add
+    .sprite(player.x, player.y, "speed")
+    .setDisplaySize(125, 125);
+  myspeed.spellID = player.playerID;
+  self.speed.add(myspeed);
 }
 
 const gameSceneConfig = {
