@@ -1,23 +1,73 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import theme from "./themes";
 
 export const StyledButton = styled.button`
+  z-index: 2;
   margin: 3px 0;
-  background-color: ${theme.d};
-  color: ${theme.a};
-  padding: 10px 20px;
+  background-color: ${theme.a};
+  color: white;
+  padding: 15px 25px;
   border: none;
-  border-radius: 4px;
-  font-size: 16px;
+  border-radius: 0px;
+  font-family: "Press Start 2P", cursive;
   text-decoration: none;
-  transition: all 0.5s ease;
-  &:hover {
-    background-color: ${theme.b};
-    color: ${theme.e};
-  }
+  font-size: 16px;
+  transition: all 0.2s ease;
+  position: relative;
   &:active {
+    box-shadow: inset 5px 5px 0px 0px rgba(0, 0, 0, 0.3);
+  }
+
+  box-shadow: inset -5px -5px 0px 0px rgba(0, 0, 0, 0.3);
+
+  &:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: content-box;
+    top: -5px;
+    left: 0;
+    border-top: 5px black solid;
+    border-bottom: 5px black solid;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: content-box;
+    top: 0;
+    left: -5px;
+    border-left: 5px black solid;
+    border-right: 5px black solid;
+  }
+
+  ${props =>
+    props.audio &&
+    css`
+      width: 70px;
+      height: 60px;
+      padding: 0 0;
+      margin: 5px 5px;
+      position: absolute;
+      right: 10px;
+      top: 5px;
+    `}
+`;
+
+export const LoginForm = styled.form`
+  flex-grow: 0;
+  z-index: 1;
+  margin: auto;
+
+  input {
+    padding: 10px 20px;
+    margin: 0 20px;
+    border: solid black 3px;
     position: relative;
-    top: 2px;
+    font-size: 16px;
   }
 `;
 

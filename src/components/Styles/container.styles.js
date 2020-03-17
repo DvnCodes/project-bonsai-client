@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import theme from "./themes";
 
 export const HeaderContainer = styled.header`
@@ -6,6 +6,7 @@ export const HeaderContainer = styled.header`
   background-color: ${theme.b};
   color: ${theme.e};
   z-index: 10;
+  position: relative;
 `;
 
 export const PrimaryContainer = styled.section`
@@ -28,6 +29,8 @@ export const MegaNotificationContainer = styled.aside`
   margin: 0;
   background-color: ${theme.c};
   box-shadow: 6px 6px 0px ${theme.b};
+
+  box-shadow: inset -5px -5px 0px 0px rgba(0, 0, 0, 0.3);
   z-index: -100;
   opacity: 0;
 
@@ -68,6 +71,29 @@ export const MegaNotificationContainer = styled.aside`
     letter-spacing: 10px;
     line-height: 1.3em;
     text-transform: uppercase;
+  }
+  &:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: content-box;
+    top: -5px;
+    left: 0;
+    border-top: 5px black solid;
+    border-bottom: 5px black solid;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: content-box;
+    top: 0;
+    left: -5px;
+    border-left: 5px black solid;
+    border-right: 5px black solid;
   }
 `;
 
@@ -232,4 +258,20 @@ export const QuizResultsContainer = styled.section`
   #incorrect {
     color: red;
   }
+`;
+
+export const WallBG = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-image: url("./assets/wallTexture.png");
+  background-size: 20%;
+  background-repeat: repeat;
+  z-index: 1;
+`;
+
+export const InstructionsBlock = styled.div`
+  z-index: 3;
 `;
