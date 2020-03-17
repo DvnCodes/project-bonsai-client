@@ -53,14 +53,18 @@ class QuizPage extends Component {
       correctAnswer,
       index
     } = this.state;
-    let answers;
 
-    if (questions[currentQuestion]) {
-      answers = [
-        questions[currentQuestion].correctA,
-        ...questions[currentQuestion].incorrectAs
-      ];
-    }
+    const answers = [
+      questions[currentQuestion].correctA,
+      ...questions[currentQuestion].incorrectAs
+    ];
+
+    // if (questions[currentQuestion]) {
+    //   answers = [
+    //     questions[currentQuestion].correctA,
+    //     ...questions[currentQuestion].incorrectAs
+    //   ];
+    // }
 
     return (
       <div>
