@@ -25,6 +25,22 @@ function preload() {
   this.load.image("red", "assets/red.png");
   this.load.image("genie", "assets/10.png");
   this.load.image("baddie", "assets/13.png");
+  this.load.spritesheet("wizRunSheet", "assets/wizRunSheet.png", {
+    frameWidth: 18,
+    frameHeight: 30
+  });
+  this.load.spritesheet("wizIdleSheet", "assets/wizIdleSheet.png", {
+    frameWidth: 18,
+    frameHeight: 30
+  });
+  this.load.spritesheet("necRunSheet", "assets/necRunSheet.png", {
+    frameWidth: 18,
+    frameHeight: 22
+  });
+  this.load.spritesheet("necIdleSheet", "assets/necIdleSheet.png", {
+    frameWidth: 18,
+    frameHeight: 22
+  });
 }
 
 function create() {
@@ -42,13 +58,50 @@ function create() {
   this.cameras.main.setDeadzone(10, 10);
   this.cameras.main.startFollow(dolly, true, 0.3, 0.3);
   this.cameras.main.setZoom(1);
+  let prevXs = {};
+
+  //  creates animations for player and enemies
+  // -Dan
+  //
+  this.anims.create({
+    key: "idle",
+    frames: this.anims.generateFrameNumbers("wizIdleSheet", {
+      frames: [0, 1, 2, 3]
+    }),
+    frameRate: 10,
+    repeat: -1
+  });
+  this.anims.create({
+    key: "run",
+    frames: this.anims.generateFrameNumbers("wizRunSheet", {
+      frames: [0, 1, 2, 3]
+    }),
+    frameRate: 10,
+    repeat: -1
+  });
+  this.anims.create({
+    key: "idleE",
+    frames: this.anims.generateFrameNumbers("necIdleSheet", {
+      frames: [0, 1, 2, 3]
+    }),
+    frameRate: 10,
+    repeat: -1
+  });
+  this.anims.create({
+    key: "runE",
+    frames: this.anims.generateFrameNumbers("necRunSheet", {
+      frames: [0, 1, 2, 3]
+    }),
+    frameRate: 10,
+    repeat: -1
+  });
 
   const currentPlayers = this.socket.on("currentPlayers", players => {
     Object.keys(players).forEach(id => {
       if (players[id].playerID === self.socket.id) {
-        displayPlayers(self, players[id], "genie");
+        displayPlayers(self, players[id], "wizIdleSheet");
       } else {
-        displayPlayers(self, players[id], "baddie");
+        displayPlayers(self, players[id], "necIdleSheet");
         displayName(self, players[id]);
       }
     });
@@ -56,7 +109,7 @@ function create() {
   listOfGameListeners.currentPlayers = currentPlayers;
 
   const newPlayer = this.socket.on("newPlayer", playerInfo => {
-    displayPlayers(self, playerInfo, "baddie");
+    displayPlayers(self, playerInfo, "necIdleSheet");
   });
   listOfGameListeners.newPlayer = newPlayer;
 
@@ -131,7 +184,26 @@ function create() {
         if (players[id].playerID === player.playerID) {
           player.setRotation(players[id].rotation);
           player.setPosition(players[id].x, players[id].y);
+
+          //this is only for enemy players
+          if (player.playerID !== socket.id) {
+            //if players x position is bigger than it was last update
+            if (prevXs[player.playerID] > players[id].x) {
+              player.flipX = true;
+              player.anims.play("runE", true);
+            }
+            if (prevXs[player.playerID] < players[id].x) {
+              player.flipX = false;
+              player.anims.play("runE", true);
+            }
+            if (prevXs[player.playerID] === players[id].x) {
+              player.anims.play("idleE", true);
+            }
+          }
+          //set the previous X value to check on next update
+          prevXs[player.playerID] = players[id].x;
         }
+
         self.names.getChildren().forEach(name => {
           if (players[id].playerID === name.playerID) {
             name.setPosition(
@@ -225,10 +297,30 @@ function update() {
   if (this.cursors.left.isDown) {
     this.leftKeyPressed = true;
     this.rightKeyPressed = false;
+    //
+    //
+    // playing correct animation for player's sprite
+    this.players.getChildren().forEach(player => {
+      if (player.playerID === this.socket.id) {
+        player.flipX = true;
+        player.anims.play("run", true);
+      }
+    });
   } else if (this.cursors.right.isDown) {
+    this.players.getChildren().forEach(player => {
+      if (player.playerID === this.socket.id) {
+        player.flipX = false;
+        player.anims.play("run", true);
+      }
+    });
     this.rightKeyPressed = true;
     this.leftKeyPressed = false;
   } else {
+    this.players.getChildren().forEach(player => {
+      if (player.playerID === this.socket.id) {
+        player.anims.play("idle", true);
+      }
+    });
     this.leftKeyPressed = false;
     this.rightKeyPressed = false;
   }
