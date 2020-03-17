@@ -35,7 +35,10 @@ class App extends React.Component {
   render() {
     return (
       <>
-        <Header toggleAudio={this.toggleAudioMute} />
+        <Header
+          toggleAudio={this.toggleAudioMute}
+          audioMute={this.state.audioMute}
+        />
         <audio
           src="./assets/battleMusic.wav"
           autoPlay={true}
