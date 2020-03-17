@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import theme from "./themes";
 
 export const StyledButton = styled.button`
@@ -43,6 +43,18 @@ export const StyledButton = styled.button`
     border-left: 5px black solid;
     border-right: 5px black solid;
   }
+
+  ${props =>
+    props.audio &&
+    css`
+      width: 70px;
+      height: 60px;
+      padding: 0 0;
+      margin: 5px 5px;
+      position: absolute;
+      right: 10px;
+      top: 5px;
+    `}
 `;
 
 export const LoginForm = styled.form`
@@ -55,6 +67,7 @@ export const LoginForm = styled.form`
     margin: 0 20px;
     border: solid black 3px;
     position: relative;
+    font-size: 16px;
   }
 `;
 
