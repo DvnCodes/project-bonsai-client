@@ -64,9 +64,10 @@ export const StyledButton = styled.button`
       margin-left: 3px;
       margin-right: 3px;
       margin-bottom: 3px;
-      background-color: ${theme.a};
       justify-self: flex-end;
       font-size: 14px;
+      background-color: ${props =>
+        props.readytojoingame === true ? theme.a : theme.b};
     `}
 `;
 
@@ -96,7 +97,7 @@ export const ChatForm = styled.form`
     flex-grow: 1;
   }
   button {
-    background-color: ${theme.b};
+    background-color: ${theme.a};
   }
 `;
 

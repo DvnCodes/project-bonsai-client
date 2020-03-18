@@ -266,10 +266,136 @@ export const WallBG = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  background-image: url("./assets/wallTexture.png");
-  background-size: 20%;
-  background-repeat: repeat;
+  background-image: url("./assets/forestBG/allLayers.png");
+  background-size: auto 100%;
   z-index: 1;
+`;
+
+export const ParallaxForestContainer = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-image: url("./assets/forestBG/layer2.png");
+  background-size: auto 100%;
+  z-index: 1;
+  overflow: hidden;
+
+  .PFLayerTwo {
+    position: absolute;
+    top: 0;
+    width: ${props => (props.componentHeight / 387) * 928 * 3}px;
+    height: 100%;
+    background-image: url("./assets/forestBG/layer3.png");
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+
+    animation: slide 100s linear infinite;
+  }
+  .PFLayerThree {
+    position: absolute;
+    top: 0;
+    width: ${props => (props.componentHeight / 387) * 928 * 3}px;
+    height: 100%;
+    background-image: url("./assets/forestBG/layer4.png");
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+
+    /* animation: slide 300s linear infinite; */
+  }
+  .PFLayerFour {
+    position: absolute;
+    top: 0;
+    width: ${props => (props.componentHeight / 387) * 928 * 3}px;
+    height: 100%;
+    background-image: url("./assets/forestBG/layer5.png");
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+
+    animation: slide 80s linear infinite;
+  }
+  .PFLayerFive {
+    position: absolute;
+    top: 0;
+    width: ${props => (props.componentHeight / 387) * 928 * 3}px;
+    height: 100%;
+    background-image: url("./assets/forestBG/layer6.png");
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+
+    animation: slide 60s linear infinite;
+  }
+  .PFLayerSix {
+    position: absolute;
+    top: 0;
+    width: ${props => (props.componentHeight / 387) * 928 * 3}px;
+    height: 100%;
+    background-image: url("./assets/forestBG/layer7.png");
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+
+    /* animation: slide 100s linear infinite; */
+  }
+  .PFLayerSeven {
+    position: absolute;
+    top: 0;
+    width: ${props => (props.componentHeight / 387) * 928 * 3}px;
+    height: 100%;
+    background-image: url("./assets/forestBG/layer8.png");
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+
+    animation: slide 30s linear infinite;
+  }
+  .PFLayerEight {
+    position: absolute;
+    top: 0;
+
+    width: ${props => (props.componentHeight / 387) * 928 * 3}px;
+    height: 100%;
+    background: url("./assets/forestBG/layer9.png");
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+
+    animation: slide 30s linear infinite;
+  }
+  .PFLayerNine {
+    position: absolute;
+    top: 0;
+    width: ${props => (props.componentHeight / 387) * 928 * 3}px;
+    height: 100%;
+    background: url("./assets/forestBG/layer10.png");
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+
+    animation: slide 30s linear infinite;
+  }
+  .PFLayerTen {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: ${props => (props.componentHeight / 387) * 928 * 3}px;
+    /* height: 100%; */
+    background: url("./assets/forestBG/layer11.png");
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+
+    animation: slide 30s linear infinite;
+  }
+
+  @keyframes slide {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    100% {
+      transform: translate3d(
+        -${props => (props.componentHeight / 387) * 928}px,
+        0,
+        0
+      );
+    }
+  }
 `;
 
 export const InstructionsBlock = styled.div`
@@ -286,6 +412,8 @@ export const LobbyContainer = styled.section`
   z-index: 1;
   width: 90%;
   height: 70vh;
+  max-height: 70vh;
+  margin: 20px 10px 30px 10px;
   box-shadow: inset -10px -10px 0px 0px rgba(0, 0, 0, 0.3);
   position: relative;
   &:before {
@@ -344,42 +472,44 @@ export const PlayerList = styled.ul`
   overflow-x: hidden;
   overflow-y: scroll;
   padding: 0;
+`;
 
-  li {
-    background-color: ${theme.d};
-    font-size: 16px;
-    text-transform: uppercase;
-    padding: 0px 5px;
-    margin: 10px 10px;
-    position: relative;
-    &:before {
-      content: "";
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      box-sizing: content-box;
-      top: -3px;
-      left: 0;
-      border-top: 3px ${theme.d} solid;
-      border-bottom: 3px ${theme.d} solid;
-    }
+export const PlayerLobbyCard = styled.li`
+  background-color: ${props => (props.ready ? theme.a : theme.b)};
+  font-size: 16px;
+  color: white;
+  text-transform: uppercase;
+  padding: 0px 5px;
+  margin: 10px 10px;
+  position: relative;
+  &:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: content-box;
+    top: -3px;
+    left: 0;
+    border-top: 3px ${props => (props.ready ? theme.a : theme.d)} solid;
+    border-bottom: 3px ${props => (props.ready ? theme.a : theme.d)} solid;
+  }
 
-    &:after {
-      content: "";
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      box-sizing: content-box;
-      top: 0;
-      left: -3px;
-      border-left: 3px ${theme.d} solid;
-      border-right: 3px ${theme.d} solid;
-    }
+  &:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: content-box;
+    top: 0;
+    left: -3px;
+    border-left: 3px ${props => (props.ready ? theme.a : theme.d)} solid;
+    border-right: 3px ${props => (props.ready ? theme.a : theme.d)} solid;
   }
 `;
 
 export const ChatMessageHistory = styled.ul`
   height: 80%;
+  max-height: 80%;
   width: 100%;
   list-style: none;
   padding: 5px 5px;
