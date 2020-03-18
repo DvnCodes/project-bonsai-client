@@ -20,6 +20,7 @@ class QuizPage extends Component {
     index: null,
     score: 0,
     answeredAll: false,
+
     quizOver: false,
     quizFinishTime: null,
     toGame: false,
@@ -40,6 +41,7 @@ class QuizPage extends Component {
     this.props.socket.off("beginQuiz");
     this.props.socket.off("updateClientDetails");
   }
+
   render() {
     const {
       questions,
@@ -54,17 +56,24 @@ class QuizPage extends Component {
       index
     } = this.state;
 
-    const answers = [
-      questions[currentQuestion].correctA,
-      ...questions[currentQuestion].incorrectAs
-    ];
+    let answers;
 
-    // if (questions[currentQuestion]) {
-    //   answers = [
-    //     questions[currentQuestion].correctA,
-    //     ...questions[currentQuestion].incorrectAs
-    //   ];
-    // }
+    if (questions[currentQuestion]) {
+      answers = [
+        questions[currentQuestion].correctA,
+        ...questions[currentQuestion].incorrectAs
+      ];
+    }
+    // return function?
+
+    if (correct !== "") {
+      for (let i = answers.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * i);
+        const temp = answers[i];
+        answers[i] = answers[j];
+        answers[j] = temp;
+      }
+    }
 
     return (
       <div>
@@ -91,8 +100,6 @@ class QuizPage extends Component {
                             ? "incorrect_answer"
                             : null
                         }
-                        // Then if the answer[i] != actual run this
-
                         key={i}
                       >
                         <button
