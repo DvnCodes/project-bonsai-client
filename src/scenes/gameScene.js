@@ -397,19 +397,36 @@ function displayPlayers(self, playerInfo, sprite) {
   self.players.add(player);
 }
 function displayAttacks(self, playerInfo) {
-  let rotation = 0;
-  if (self.direction.left === true) {
-    rotation = 100;
+  let rotation;
+  if (self.direction.left) {
+    rotation = -180;
   }
-  if (self.direction.right === true) {
-    rotation = 70;
+  if (self.direction.right) {
+    rotation = 0;
   }
-  console.log(rotation);
+  if (self.direction.down) {
+    rotation = 90;
+  }
+  if (self.direction.up) {
+    rotation = -90;
+  }
+  if (self.direction.up && self.direction.right) {
+    rotation = -45;
+  }
+  if (self.direction.up && self.direction.left) {
+    rotation = -135;
+  }
+  if (self.direction.down && self.direction.right) {
+    rotation = 45;
+  }
+  if (self.direction.down && self.direction.left) {
+    rotation = 135;
+  }
   const attack = self.add
     .sprite(playerInfo.x, playerInfo.y, "fireBallSheet")
     .setOrigin(0.5, 0.5)
     .setDisplaySize(66, 34)
-    .setRotation(rotation);
+    .setRotation(Phaser.Math.DegToRad(rotation));
   attack.anims.play("fireBall", true);
 
   attack.attackID = playerInfo.attackID;
