@@ -4,9 +4,11 @@ import {
   LobbyContainer,
   PlayerList,
   ChatMessageHistory,
-  WallBG
+  WallBG,
+  PlayerLobbyCard
 } from "../Styles/container.styles";
 import { StyledButton, ChatForm } from "../Styles/ui.styles";
+import ParallaxForest from "../Styles/ParallaxForest";
 
 class Lobby extends Component {
   state = {
@@ -20,7 +22,7 @@ class Lobby extends Component {
       <Redirect noThrow to="/" />
     ) : (
       <>
-        <WallBG></WallBG>
+        <ParallaxForest />
         {this.state.everyoneReady === true && <Redirect noThrow to="/quiz" />}
         <h1>Game Lobby</h1>
         <LobbyContainer>
@@ -29,14 +31,21 @@ class Lobby extends Component {
             <PlayerList>
               {this.state.currentLobbyGuests.map(guest => {
                 return (
-                  <li key={guest.socket}>
+                  <PlayerLobbyCard key={guest.socket} ready={guest.ready}>
                     <p>{guest.username}</p>
-                  </li>
+                  </PlayerLobbyCard>
                 );
               })}
             </PlayerList>
-            <StyledButton onClick={this.readyUp} joinGame>
-              Waiting for other players...
+            <StyledButton
+              onClick={this.readyUp}
+              joinGame
+              readytojoingame={this.checkOwnReadyStatus()}
+            >
+              {this.checkOwnReadyStatus()
+                ? `waiting for ${4 -
+                    this.checkHowManyPlayersReady()} other players`
+                : "Join Game"}
             </StyledButton>
           </div>
           <div className="LobbyMessaging">
@@ -55,21 +64,6 @@ class Lobby extends Component {
             </ChatForm>
           </div>
         </LobbyContainer>
-
-        <div>
-          <h2>(2 peeps needed) Joining next game:</h2>
-          <ul>
-            {this.state.currentLobbyGuests.map(guest => {
-              return (
-                guest.ready && (
-                  <li key={guest.socket}>
-                    <p>{guest.username}</p>
-                  </li>
-                )
-              );
-            })}
-          </ul>
-        </div>
       </>
     );
   }
@@ -157,6 +151,20 @@ class Lobby extends Component {
 
     this.props.socket.emit("lobbyMessageSend", this.state.chatInput);
     this.setState({ chatInput: "" });
+  };
+  checkOwnReadyStatus = () => {
+    const ownClient = this.state.currentLobbyGuests.find(guest => {
+      return guest.socket === this.props.socket.id;
+    });
+    if (ownClient === undefined) return false;
+    else return ownClient.ready;
+  };
+  checkHowManyPlayersReady = () => {
+    const playerReadyCount = this.state.currentLobbyGuests.reduce(
+      (acc, curr) => acc + (curr.ready === true && 1),
+      0
+    );
+    return playerReadyCount;
   };
 }
 
