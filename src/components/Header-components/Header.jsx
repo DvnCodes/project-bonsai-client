@@ -9,7 +9,7 @@ import { HeadingText } from "../Styles/text.styles";
 const Header = props => {
   return (
     <HeaderContainer>
-      <HeadingText>Quizards</HeadingText>
+      <HeadingText>Qwizards</HeadingText>
       <StyledButton onClick={props.toggleAudio} audio>
         {props.audioMute ? (
           <img
