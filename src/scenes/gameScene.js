@@ -25,6 +25,7 @@ function preload() {
   this.load.image("red", "assets/red.png");
   this.load.image("genie", "assets/10.png");
   this.load.image("baddie", "assets/13.png");
+  this.load.bitmapFont("myfont", "assets/font.png", "assets/font.fnt");
   this.load.spritesheet("wizRunSheet", "assets/wizRunSheet.png", {
     frameWidth: 18,
     frameHeight: 30
@@ -51,6 +52,7 @@ function create() {
   // console.log("client creating game scene");
   listOfGameListeners = {};
   socket.emit("gameLoaded", socket.id);
+  let diretion = {};
   const self = this;
   this.socket = socket;
   this.players = this.add.group();
@@ -365,6 +367,12 @@ function update() {
       up: this.upKeyPressed,
       down: this.downKeyPressed
     });
+    this.direction = {
+      left: this.leftKeyPressed,
+      right: this.rightKeyPressed,
+      up: this.upKeyPressed,
+      down: this.downKeyPressed
+    };
   }
 
   if (Phaser.Input.Keyboard.JustDown(spacebar)) {
@@ -389,10 +397,19 @@ function displayPlayers(self, playerInfo, sprite) {
   self.players.add(player);
 }
 function displayAttacks(self, playerInfo) {
+  let rotation = 0;
+  if (self.direction.left === true) {
+    rotation = 100;
+  }
+  if (self.direction.right === true) {
+    rotation = 70;
+  }
+  console.log(rotation);
   const attack = self.add
     .sprite(playerInfo.x, playerInfo.y, "fireBallSheet")
     .setOrigin(0.5, 0.5)
-    .setDisplaySize(66, 34);
+    .setDisplaySize(66, 34)
+    .setRotation(rotation);
   attack.anims.play("fireBall", true);
 
   attack.attackID = playerInfo.attackID;
@@ -408,9 +425,14 @@ function displayLife(self, player) {
 }
 
 function displayName(self, player) {
-  let style = { font: "12px Arial", fill: "#ff0044", align: "center" };
-  let text = `${player.username} ${player.power}`;
-  const playerName = self.add.text(player.x, player.y - 40, text, style);
+  let text = `${player.username} ${player.playerLevel} `;
+  const playerName = self.add.bitmapText(
+    player.x,
+    player.y - 40,
+    "myfont",
+    text,
+    15
+  );
   playerName.playerID = player.playerID;
   // playerName.anchor.setTo(0.5);
   self.names.add(playerName);
@@ -436,6 +458,7 @@ const gameSceneConfig = {
       gravity: { y: 0 }
     }
   },
+  pixelArt: true,
   scene: {
     preload,
     create,
