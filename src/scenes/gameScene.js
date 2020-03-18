@@ -179,15 +179,6 @@ function create() {
         life = players[this.socket.id].life;
 
         // displayLife(self, players[this.socket.id]);
-      } else {
-        self.stats.getChildren().forEach(lifebar => {
-          //this actually creates a duplicate, non responding lifebar set off the map
-          // couldnt keep it working without this, see if you can fix
-          lifebar.setPosition(
-            players[lifebar.lifebarID].x,
-            players[lifebar.lifebarID].y + 1000
-          );
-        });
       }
     }
 
@@ -198,13 +189,22 @@ function create() {
       if (allNames.length === 0 && players[id].playerID !== socket.id) {
         displayName(self, players[id]);
       }
+      self.names.getChildren().forEach(name => {
+        if (players[name.playerID].life === 0) {
+          name.destroy();
+        }
+      });
       let allLives = self.lives.getChildren().filter(life => {
         return life.playerID === players[id].playerID;
       });
       if (allLives.length === 0 && players[id].playerID !== socket.id) {
         displayEnemyLife(self, players[id]);
       }
-
+      self.lives.getChildren().forEach(life => {
+        if (players[life.playerID].life === 0) {
+          life.destroy();
+        }
+      });
       self.players.getChildren().forEach(player => {
         if (players[id].playerID === player.playerID) {
           player.setRotation(players[id].rotation);
@@ -233,10 +233,15 @@ function create() {
 
         self.lives.getChildren().forEach(life => {
           if (players[id].playerID === life.playerID) {
-            life.setPosition(
-              players[id].x - life.width / 2,
-              players[id].y + 40
-            );
+            if (players[id].life !== life.life) {
+              life.destroy();
+              displayEnemyLife(self, players[id]);
+            } else {
+              life.setPosition(
+                players[id].x - life.width / 2,
+                players[id].y + 40
+              );
+            }
           }
         });
 
@@ -301,7 +306,8 @@ function create() {
       if (player.playerID === playerID) {
         // self.add.image(player.x, player.y, "dead");
         console.log("DEAD");
-        player.setTexture("dead");
+        player.destroy();
+        let deathLocation = self.load.image(player.x, player.y, "star");
       }
     });
   });
@@ -485,6 +491,7 @@ function displayEnemyLife(self, player) {
     15
   );
   playerLife.playerID = player.playerID;
+  playerLife.life = player.life;
   // playerName.anchor.setTo(0.5);
   self.lives.add(playerLife);
 }
