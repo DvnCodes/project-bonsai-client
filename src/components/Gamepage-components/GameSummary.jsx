@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 import { Link } from "@reach/router";
+import { GameSummaryContainer } from "../Styles/container.styles";
+import ParallaxForest from "../Styles/ParallaxForest";
+import { StyledButton } from "../Styles/ui.styles";
+import star from "../../assets/star2.png";
 
 class GameSummary extends Component {
   state = { statsData: this.props.statsData };
@@ -13,44 +17,55 @@ class GameSummary extends Component {
 
   render() {
     return (
-      <div>
-        <h1>Game Summary</h1>
-
-        {Object.keys(this.state.statsData).map(ID => {
-          return (
-            this.state.statsData[ID].winner && (
-              <h2 key={ID}>WINNER: {this.state.statsData[ID].username}</h2>
-            )
-          );
-        })}
-
-        <ul>
-          {Object.keys(this.state.statsData)
-            .sort((a, b) => {
-              console.log(a);
-
+      <>
+        <ParallaxForest></ParallaxForest>
+        <div>
+          <h1>Game Summary</h1>
+          <GameSummaryContainer>
+            {Object.keys(this.state.statsData).map(ID => {
               return (
-                this.state.statsData[a].rank - this.state.statsData[b].rank
-              );
-            })
-            .map(ID => {
-              return (
-                <li key={ID}>
-                  {this.state.statsData[ID].username} : RANK:{" "}
-                  {this.state.statsData[ID].rank}
-                  KILLS: {this.state.statsData[ID].kills}
-                  HITS: {this.state.statsData[ID].hits}
-                  ACCURACY:
-                  {this.state.statsData[ID].spellsCast /
-                    this.state.statsData[ID].hits}
-                </li>
+                this.state.statsData[ID].winner && (
+                  <h1 key={ID}>
+                    <img src={star}></img>
+                    {this.state.statsData[ID].username} WINS!
+                    <img src={star}></img>
+                  </h1>
+                )
               );
             })}
-        </ul>
-        <Link to="/lobby">
-          <button onClick={this.onClick}>return to lobby</button>
-        </Link>
-      </div>
+
+            <div>
+              {Object.keys(this.state.statsData)
+                .sort((a, b) => {
+                  console.log(a);
+
+                  return (
+                    this.state.statsData[a].rank - this.state.statsData[b].rank
+                  );
+                })
+                .map(ID => {
+                  return (
+                    <p key={ID} className="playerTile">
+                      {this.state.statsData[ID].username} <br></br>
+                      RANK: {this.state.statsData[ID].rank}
+                      <br></br>
+                      KILLS: {this.state.statsData[ID].kills}
+                      <br></br>
+                      HITS: {this.state.statsData[ID].hits}
+                      <br></br>
+                      ACCURACY:{" "}
+                      {this.state.statsData[ID].spellsCast /
+                        this.state.statsData[ID].hits}
+                    </p>
+                  );
+                })}
+            </div>
+            <Link to="/lobby">
+              <StyledButton>Return to Lobby</StyledButton>
+            </Link>
+          </GameSummaryContainer>
+        </div>
+      </>
     );
   }
 
