@@ -376,10 +376,10 @@ function update() {
   }
 
   if (Phaser.Input.Keyboard.JustDown(spacebar)) {
-    this.socket.emit("attackInput", "hi");
+    this.socket.emit("attackInput", this.direction);
   }
   if (Phaser.Input.Keyboard.JustDown(qu)) {
-    this.socket.emit("attackInput", "hi");
+    this.socket.emit("attackInput", this.direction);
   }
   if (Phaser.Input.Keyboard.JustDown(wu)) {
     console.log("something!!!");
@@ -398,28 +398,29 @@ function displayPlayers(self, playerInfo, sprite) {
 }
 function displayAttacks(self, playerInfo) {
   let rotation;
-  if (self.direction.left) {
+
+  if (playerInfo.direction.left) {
     rotation = -180;
   }
-  if (self.direction.right) {
+  if (playerInfo.direction.right) {
     rotation = 0;
   }
-  if (self.direction.down) {
+  if (playerInfo.direction.down) {
     rotation = 90;
   }
-  if (self.direction.up) {
+  if (playerInfo.direction.up) {
     rotation = -90;
   }
-  if (self.direction.up && self.direction.right) {
+  if (playerInfo.direction.up && playerInfo.direction.right) {
     rotation = -45;
   }
-  if (self.direction.up && self.direction.left) {
+  if (playerInfo.direction.up && playerInfo.direction.left) {
     rotation = -135;
   }
-  if (self.direction.down && self.direction.right) {
+  if (playerInfo.direction.down && playerInfo.direction.right) {
     rotation = 45;
   }
-  if (self.direction.down && self.direction.left) {
+  if (playerInfo.direction.down && playerInfo.direction.left) {
     rotation = 135;
   }
   const attack = self.add
