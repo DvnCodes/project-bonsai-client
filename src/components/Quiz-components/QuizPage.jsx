@@ -3,6 +3,7 @@ import Timer from "./Timer";
 import QuizResultPage from "./QuizResultPage";
 import { Redirect } from "@reach/router";
 import "../../App.css";
+import { QuizPageDivContainer, WallBG } from "../Styles/container.styles";
 
 class QuizPage extends Component {
   state = {
@@ -63,7 +64,8 @@ class QuizPage extends Component {
     }
 
     return (
-      <div>
+      <>
+        <WallBG></WallBG>
         <h1>Quiz</h1>
         {toGame && <Redirect noThrow to="/game" />}
 
@@ -73,9 +75,10 @@ class QuizPage extends Component {
             {" "}
             {!quizOver ? (
               <>
-                <Timer seconds={30} timeUp={this.quizOver} />
+                <Timer seconds={10} timeUp={this.quizOver} />
 
                 <p>Score: {score}</p>
+
                 <h2>{questions[currentQuestion].q}?</h2>
                 <ol>
                   {answers.map((answer, i) => {
@@ -108,7 +111,7 @@ class QuizPage extends Component {
               <>
                 <h2>Game Starting in:</h2>
 
-                <Timer seconds={1} timeUp={this.startGame} />
+                <Timer seconds={300} timeUp={this.startGame} />
                 <QuizResultPage
                   score={this.state.score}
                   quizResults={this.state.quizResults}
@@ -117,7 +120,7 @@ class QuizPage extends Component {
             )}
           </>
         )}
-      </div>
+      </>
     );
   }
 

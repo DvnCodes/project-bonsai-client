@@ -239,24 +239,83 @@ export const BarContainer = styled.section`
 `;
 
 export const QuizResultsContainer = styled.section`
+  width: 80%;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr;
+  grid-template-rows: 1fr 1fr;
   grid-template-areas: "left right";
   #results {
     grid-area: left;
     list-style: none;
     justify-self: center;
+    margin-right: 10px;
   }
   #gameEffects {
     grid-area: right;
     justify-self: center;
+    margin-left: 10px;
   }
   #correct {
     color: green;
   }
   #incorrect {
     color: red;
+  }
+  flex-grow: 1;
+
+  background-color: ${theme.e};
+  z-index: 1;
+  width: 90%;
+  height: 50%;
+  box-shadow: inset -10px -10px 0px 0px rgba(0, 0, 0, 0.3);
+  position: relative;
+  &:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: content-box;
+    top: -10px;
+    left: 0;
+    border-top: 10px black solid;
+    border-bottom: 10px black solid;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: content-box;
+    top: 0;
+    left: -10px;
+    border-left: 10px black solid;
+    border-right: 10px black solid;
+  }
+
+  .LobbyControls {
+    height: 95%;
+    width: 25%;
+    max-width: 500px;
+    flex-grow: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .LobbyMessaging {
+    flex-grow: 1;
+    height: 95%;
+    z-index: 3;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  h2 {
+    font-size: 16px;
   }
 `;
 
@@ -274,6 +333,43 @@ export const WallBG = styled.div`
 
 export const InstructionsBlock = styled.div`
   z-index: 3;
+`;
+
+export const QuizResultsDivContainer = styled.div`
+  flex-grow: 1;
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: ${theme.e};
+  z-index: 1;
+  width: 90%;
+  height: 60vh;
+  box-shadow: inset -10px -10px 0px 0px rgba(0, 0, 0, 0.3);
+  position: relative;
+
+  h2 {
+    font-size: 16px;
+  }
+`;
+
+export const QuizPageDivContainer = styled.div`
+  flex-grow: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  background-color: ${theme.e};
+  z-index: 1;
+  width: 90%;
+  height: 70vh;
+  box-shadow: inset -10px -10px 0px 0px rgba(0, 0, 0, 0.3);
+  position: relative;
+
+  h2 {
+    font-size: 16px;
+  }
 `;
 
 export const LobbyContainer = styled.section`
