@@ -60,6 +60,7 @@ function create() {
   this.stats = this.add.group();
   this.spells = this.add.group();
   this.names = this.add.group();
+  this.lives = this.add.group();
   dolly = this.physics.add.image(100, 100, "star");
   this.cameras.main.setDeadzone(10, 10);
   this.cameras.main.startFollow(dolly, true, 0.3, 0.3);
@@ -117,6 +118,7 @@ function create() {
       } else {
         displayPlayers(self, players[id], "necIdleSheet");
         displayName(self, players[id]);
+        displayEnemyLife(self, players[id]);
       }
     });
   });
@@ -196,6 +198,12 @@ function create() {
       if (allNames.length === 0 && players[id].playerID !== socket.id) {
         displayName(self, players[id]);
       }
+      let allLives = self.lives.getChildren().filter(life => {
+        return life.playerID === players[id].playerID;
+      });
+      if (allLives.length === 0 && players[id].playerID !== socket.id) {
+        displayEnemyLife(self, players[id]);
+      }
 
       self.players.getChildren().forEach(player => {
         if (players[id].playerID === player.playerID) {
@@ -205,7 +213,7 @@ function create() {
           // if the player is an enemy player
           if (player.playerID !== socket.id) {
             //display life for enemy players
-            displayLife(self, players[player.playerID]);
+            // displayLife(self, players[player.playerID]);
             //if players x position is bigger than it was last update
             if (prevXs[player.playerID] > players[id].x) {
               player.flipX = true;
@@ -222,6 +230,15 @@ function create() {
           //set the previous X value to check on next update
           prevXs[player.playerID] = players[id].x;
         }
+
+        self.lives.getChildren().forEach(life => {
+          if (players[id].playerID === life.playerID) {
+            life.setPosition(
+              players[id].x - life.width / 2,
+              players[id].y + 40
+            );
+          }
+        });
 
         self.names.getChildren().forEach(name => {
           if (players[id].playerID === name.playerID) {
@@ -282,8 +299,9 @@ function create() {
   const onDie = this.socket.on("onDie", playerID => {
     self.players.getChildren().forEach(player => {
       if (player.playerID === playerID) {
-        self.add.image(player.x, player.y, "dead");
-        player.setTexture("star");
+        // self.add.image(player.x, player.y, "dead");
+        console.log("DEAD");
+        player.setTexture("dead");
       }
     });
   });
@@ -434,14 +452,6 @@ function displayAttacks(self, playerInfo) {
   self.attacks.add(attack);
 }
 
-function displayLife(self, player) {
-  const lifebars = self.add
-    .sprite(player.x, player.y + 40, "green")
-    .setDisplaySize(player.life * 10, 10);
-  lifebars.lifebarID = player.playerID;
-  self.stats.add(lifebars);
-}
-
 function displayName(self, player) {
   let text = `${player.username} ${player.playerLevel} `;
   const playerName = self.add.bitmapText(
@@ -462,6 +472,21 @@ function showspell(self, player, sprite) {
     .setDisplaySize(125, 125);
   myspell.spellID = player.playerID;
   self.spells.add(myspell);
+}
+
+function displayEnemyLife(self, player) {
+  // let style = { font: "12px Arial", fill: "#ff0044", align: "center" };
+  let text = `${player.life}`;
+  const playerLife = self.add.bitmapText(
+    player.x,
+    player.y + 40,
+    "myfont",
+    text,
+    15
+  );
+  playerLife.playerID = player.playerID;
+  // playerName.anchor.setTo(0.5);
+  self.lives.add(playerLife);
 }
 
 const gameSceneConfig = {
