@@ -2,7 +2,11 @@ import React, { Component } from "react";
 import { IonPhaser } from "@ion-phaser/react";
 import { gameSceneConfig } from "../../scenes/gameScene";
 import { Redirect } from "@reach/router";
-import { MegaNotificationContainer } from "../Styles/container.styles";
+import {
+  MegaNotificationContainer,
+  GameBorderUI
+} from "../Styles/container.styles";
+import PlayerStatsPane from "./PlayerStatsPane";
 
 class Gamepage extends Component {
   state = {
@@ -13,7 +17,8 @@ class Gamepage extends Component {
     winner: null,
     showGameSummary: false,
     isBanished: false,
-    inGame: false
+    inGame: false,
+    playerHealthPercentage: 100
   };
 
   render() {
@@ -24,7 +29,6 @@ class Gamepage extends Component {
     ) : (
       <>
         {this.state.showGameSummary && <Redirect noThrow to="/summary" />}{" "}
-        <h1>GAMEPAGE</h1>
         {this.state.winner && (
           <MegaNotificationContainer>
             <h2>{this.state.winner} wins!</h2>
@@ -38,6 +42,17 @@ class Gamepage extends Component {
           )}
           {isBanished && <h1>BANISHED</h1>}
         </div>
+        <GameBorderUI>
+          <div className="borderRight"></div>
+          <div className="borderLeft"></div>
+          {/* <div className="borderTop"></div> */}
+          <div className="borderTopLeft"></div>
+          <div className="borderTopRight"></div>
+          {/* <div className="borderBottom"></div> */}
+          <div className="borderBottomLeft"></div>
+          <div className="borderBottomRight"></div>
+        </GameBorderUI>
+        <PlayerStatsPane healthPercentage={this.state.playerHealthPercentage} />
       </>
     );
   }
@@ -56,6 +71,17 @@ class Gamepage extends Component {
       this.props.updateStatsData(playerClientUpdateObject);
       this.setState({ showGameSummary: true });
     });
+    this.props.socket.on(
+      "playerHealth",
+      (clientID, currentHealth, maxHealth) => {
+        console.log(clientID, currentHealth, maxHealth);
+        if (this.props.socket.id === clientID) {
+          const healthPercentage = (currentHealth / maxHealth) * 100;
+          console.log(healthPercentage);
+          this.setState({ playerHealthPercentage: healthPercentage });
+        }
+      }
+    );
   }
 
   componentDidUpdate(prevProps, prevState) {
