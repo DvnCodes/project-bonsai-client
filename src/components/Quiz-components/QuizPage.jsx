@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Timer from "./Timer";
 import QuizResultPage from "./QuizResultPage";
+import QuestionCard from "./QuestionCards";
 import { Redirect } from "@reach/router";
 import "../../App.css";
 
@@ -14,10 +15,6 @@ class QuizPage extends Component {
     ],
     answers: [],
     currentQuestion: 0,
-    answer: null,
-    correctAnswer: null,
-    correct: "",
-    index: null,
     score: 0,
     answeredAll: false,
 
@@ -29,8 +26,15 @@ class QuizPage extends Component {
 
   componentDidMount() {
     this.props.socket.emit("sendQuizQuestions");
-    this.props.socket.on("beginQuiz", (questionsList, finishTime) => {
-      this.setState({ questions: questionsList, quizFinishTime: finishTime });
+    this.props.socket.on("beginQuiz", (questionsAndAnswers, finishTime) => {
+      const [allQuestions, allAnswers] = questionsAndAnswers;
+      console.log(allAnswers, allQuestions);
+
+      this.setState({
+        questions: allQuestions,
+        answers: allAnswers,
+        quizFinishTime: finishTime
+      });
     });
     this.props.socket.on("updateClientDetails", updatedDetails => {
       this.props.updateClientDetails(updatedDetails);
@@ -45,6 +49,7 @@ class QuizPage extends Component {
   render() {
     const {
       questions,
+      answers,
       currentQuestion,
       quizOver,
       quizFinishTime,
@@ -55,25 +60,6 @@ class QuizPage extends Component {
       correctAnswer,
       index
     } = this.state;
-
-    let answers;
-
-    if (questions[currentQuestion]) {
-      answers = [
-        questions[currentQuestion].correctA,
-        ...questions[currentQuestion].incorrectAs
-      ];
-    }
-    // return function?
-
-    if (correct !== "") {
-      for (let i = answers.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * i);
-        const temp = answers[i];
-        answers[i] = answers[j];
-        answers[j] = temp;
-      }
-    }
 
     return (
       <div>
@@ -86,34 +72,15 @@ class QuizPage extends Component {
             {" "}
             {!quizOver ? (
               <>
-                <Timer seconds={30} timeUp={this.quizOver} />
+                <Timer seconds={120} timeUp={this.quizOver} />
 
                 <p>Score: {score}</p>
                 <h2>{questions[currentQuestion].q}?</h2>
-                <ol>
-                  {answers.map((answer, i) => {
-                    return (
-                      <li
-                        className={
-                          answer === correctAnswer
-                            ? "correct_answer"
-                            : i === index && answer !== correctAnswer
-                            ? "incorrect_answer"
-                            : null
-                        }
-                        key={i}
-                      >
-                        <button
-                          onClick={e => {
-                            this.handleAnswer(answer, i);
-                          }}
-                        >
-                          {answer}
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ol>
+                <QuestionCard
+                  answers={answers[currentQuestion]}
+                  question={questions[currentQuestion]}
+                  handleAnswer={this.handleAnswer}
+                />
               </>
             ) : (
               <>
@@ -132,60 +99,53 @@ class QuizPage extends Component {
     );
   }
 
-  handleAnswer = (answer, i) => {
+  handleAnswer = (e, answer) => {
+    console.log("handler");
     const { questions, currentQuestion } = this.state;
     if (parseInt(answer) === questions[currentQuestion].correctA) {
-      this.setState({ correct: true, correctAnswer: answer, index: i }, () =>
-        setTimeout(() => {
-          this.setState(currentState => {
-            const nextQuestion = currentState.currentQuestion + 1;
-            const newScore = currentState.score + 1;
+      // this.setState({ correct: true }, () =>
+      setTimeout(() => {
+        this.setState(currentState => {
+          const nextQuestion = currentState.currentQuestion + 1;
+          const newScore = currentState.score + 1;
 
-            const newResults = [...currentState.quizResults];
-            newResults.push([this.state.questions[currentQuestion], "correct"]);
+          const newResults = [...currentState.quizResults];
+          newResults.push([this.state.questions[currentQuestion], "correct"]);
 
-            return {
-              currentQuestion: nextQuestion,
-              score: newScore,
-              quizResults: newResults,
-              correct: "",
-              correctAnswer: null,
-              index: null
-            };
-          });
-        }, 700)
-      );
+          return {
+            currentQuestion: nextQuestion,
+            score: newScore,
+            quizResults: newResults
+          };
+        });
+      }, 700);
+      // );
     }
     if (parseInt(answer) !== questions[currentQuestion].correctA) {
-      this.setState(
-        {
-          correct: false,
-          index: i,
-          correctAnswer: questions[currentQuestion].correctA
-        },
-        () =>
-          setTimeout(() => {
-            this.setState(currentState => {
-              const nextQuestion = currentState.currentQuestion + 1;
-              const newScore =
-                this.state.score === 0 ? 0 : currentState.score - 1;
-              const newResults = [...currentState.quizResults];
-              newResults.push([
-                this.state.questions[currentQuestion],
-                "incorrect"
-              ]);
+      // this.setState(
+      //   {
+      //     correct: false,
+      //     correctAnswer: questions[currentQuestion].correctA
+      //   },
+      //   () =>
+      setTimeout(() => {
+        this.setState(currentState => {
+          const nextQuestion = currentState.currentQuestion + 1;
+          const newScore = this.state.score === 0 ? 0 : currentState.score - 1;
+          const newResults = [...currentState.quizResults];
+          newResults.push([this.state.questions[currentQuestion], "incorrect"]);
 
-              return {
-                currentQuestion: nextQuestion,
-                score: newScore,
-                quizResults: newResults,
-                correct: "",
-                correctAnswer: null,
-                index: null
-              };
-            });
-          }, 700)
-      );
+          return {
+            currentQuestion: nextQuestion,
+            score: newScore,
+            quizResults: newResults
+            // correct: "",
+            // correctAnswer: null,
+            // index: null
+          };
+        });
+      }, 700);
+      //);
     }
 
     if (currentQuestion + 1 === questions.length) {
