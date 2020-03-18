@@ -3,10 +3,10 @@ import { Link } from "@reach/router";
 import {
   PrimaryContainer,
   MegaNotificationContainer,
-  WallBG,
   InstructionsBlock
 } from "../Styles/container.styles";
 import { StyledButton, LoginForm } from "../Styles/ui.styles";
+import ParallaxForest from "../Styles/ParallaxForest";
 
 class Login extends React.Component {
   state = {
@@ -18,7 +18,7 @@ class Login extends React.Component {
     const { username } = this.state;
     return (
       <PrimaryContainer>
-        <WallBG></WallBG>
+        <ParallaxForest />
         {this.state.loggedIn === false && (
           <LoginForm onSubmit={this.handleSubmit}>
             <input
