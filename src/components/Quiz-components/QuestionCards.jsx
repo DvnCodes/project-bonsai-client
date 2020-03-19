@@ -17,25 +17,21 @@ class QuestionCard extends Component {
         {" "}
         <ol style={{ listStyleType: "none", margin: 0, padding: 0 }}>
           {answers.map((answer, i) => {
+            const correctOrIncorrect =
+              answered && answer === question.correctA
+                ? "correct"
+                : answer !== question.correctA && index === i
+                ? "incorrect"
+                : null;
+
             return (
-              <li
-              // className={
-              //   answered && answer === question.correctA
-              //     ? "correct_answer"
-              //     : answer !== question.correctA && index === i
-              //     ? "incorrect_answer"
-              //     : null
-              // }
-              >
+              <li>
                 <StyledButton
                   onClick={e => {
                     this.correctAnswer(e, answer, i);
                   }}
-                  answered={answered}
-                  answer={answer}
+                  colour={correctOrIncorrect}
                   correctAnswer={question.correctA}
-                  index={index}
-                  answerIndex={i}
                 >
                   {answer}
                 </StyledButton>

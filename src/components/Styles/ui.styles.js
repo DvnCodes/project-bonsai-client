@@ -73,18 +73,15 @@ export const StyledButton = styled.button`
     ${props =>
       props.correctAnswer &&
       css`
-        background-color: ${theme.c};
+        background-color: ${!props.colour
+          ? theme.c
+          : props.colour === "correct"
+          ? theme.f
+          : theme.a};
         color: black;
       `}
 
-      ${({ answered, answer, correctAnswer, index, answerIndex }) =>
-        css`
-          background-colour: ${answered && answer === correctAnswer
-            ? theme.b
-            : answer !== correctAnswer && index === answerIndex
-            ? theme.a
-            : null};
-        `}
+    
       
 `;
 

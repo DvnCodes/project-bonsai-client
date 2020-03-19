@@ -12,7 +12,7 @@ export const TimeBar = styled.h1`
       : null};
 
   height: 4vh;
-  animation: TimeBarAnimation 60s linear 1;
+  animation: TimeBarAnimation 30s linear 1;
 
   @keyframes TimeBarAnimation {
     0% {
