@@ -54,8 +54,12 @@ class GameSummary extends Component {
                       HITS: {this.state.statsData[ID].hits}
                       <br></br>
                       ACCURACY:{" "}
-                      {this.state.statsData[ID].spellsCast /
-                        this.state.statsData[ID].hits}
+                      {Math.round(
+                        (this.state.statsData[ID].hits /
+                          this.state.statsData[ID].spellsCast) *
+                          100
+                      )}
+                      %
                     </p>
                   );
                 })}

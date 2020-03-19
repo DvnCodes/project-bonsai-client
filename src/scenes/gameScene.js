@@ -51,6 +51,10 @@ function preload() {
     frameWidth: 100,
     frameHeight: 100
   });
+  this.load.audio("casting", "assets/casting.wav");
+  this.load.audio("death", "assets/death.wav");
+  this.load.audio("hitVic", "assets/hitVic.wav");
+  this.load.audio("hitAtt", "assets/hitAtt.wav");
 }
 
 function create() {
@@ -70,6 +74,7 @@ function create() {
   this.cameras.main.setDeadzone(10, 10);
   this.cameras.main.startFollow(dolly, true, 0.3, 0.3);
   this.cameras.main.setZoom(1);
+  this.cameras.main.setBackgroundColor("rgba(15,63,82,1)");
   let prevXs = {};
 
   //  creates animations for player and enemies
@@ -143,6 +148,7 @@ function create() {
   listOfGameListeners.newPlayer = newPlayer;
 
   const newAttack = this.socket.on("newAttack", playerInfo => {
+    this.sound.play("casting");
     displayAttacks(self, playerInfo);
   });
   listOfGameListeners.newAttack = newAttack;
@@ -180,6 +186,14 @@ function create() {
   });
   listOfGameListeners.spellAdded = spellAdded;
 
+  const playerHit = this.socket.on(
+    "playerHealth",
+    (clientID, currentHealth, maxHealth) => {
+      if (this.socket.id === clientID) {
+        this.cameras.main.shake(200, 0.01);
+      }
+    }
+  );
   const playerUpdates = this.socket.on("playerUpdates", players => {
     if (players[this.socket.id]) {
       if (life === undefined) {
@@ -311,14 +325,22 @@ function create() {
       }
     });
   });
-
   listOfGameListeners.attackUpdates = attackUpdates;
+
+  this.socket.on("hit", (attackerID, victimID) => {
+    if (socket.id === attackerID) {
+      self.sound.play("hitAtt");
+    }
+    if (socket.id === victimID) {
+      self.sound.play("hitVic");
+    }
+  });
 
   const onDie = this.socket.on("onDie", playerID => {
     self.players.getChildren().forEach(player => {
       if (player.playerID === playerID) {
         // self.add.image(player.x, player.y, "dead");
-        console.log("DEAD");
+        self.sound.play("death");
         player.destroy();
         let deathLocation = self.load.image(player.x, player.y, "star");
       }
@@ -531,8 +553,8 @@ function displayEnemyLife(self, player) {
 const gameSceneConfig = {
   type: Phaser.AUTO,
   parent: "gameWindow",
-  width: 1280,
-  height: 800,
+  width: "100%",
+  height: "100%",
   physics: {
     default: "arcade",
     arcade: {

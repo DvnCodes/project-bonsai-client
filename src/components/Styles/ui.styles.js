@@ -69,6 +69,23 @@ export const StyledButton = styled.button`
       background-color: ${props =>
         props.readytojoingame === true ? theme.a : theme.b};
     `}
+
+    ${props =>
+      props.correctAnswer &&
+      css`
+        background-color: ${theme.c};
+        color: black;
+      `}
+
+      ${({ answered, answer, correctAnswer, index, answerIndex }) =>
+        css`
+          background-colour: ${answered && answer === correctAnswer
+            ? theme.b
+            : answer !== correctAnswer && index === answerIndex
+            ? theme.a
+            : null};
+        `}
+      
 `;
 
 export const LoginForm = styled.form`
