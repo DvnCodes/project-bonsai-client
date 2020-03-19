@@ -399,18 +399,29 @@ export const ParallaxForestContainer = styled.div`
 `;
 
 export const InstructionsBlock = styled.div`
-  color: ${theme.b};
-  background-color: ${theme.d};
+  color: black;
+  background-color: ${props => (props.color === "red" ? theme.a : theme.d)};
   z-index: 1;
   width: 90%;
   margin: 20px 10px 30px 10px;
   box-shadow: inset -10px -10px 0px 0px rgba(0, 0, 0, 0.3);
   position: relative;
   text-align: center;
+  h3 {
+    padding: 5px;
+    margin: 5px;
+  }
+  ul {
+    padding: 0;
+    list-style-position: inside;
+    list-style-image: ${props =>
+      props.type === "controls" ? "none" : "square"};
+  }
+
   li {
-    line-height: 30px;
-    list-style-type: none;
-    padding: none;
+    font-size: 0.7em;
+    margin: 10px;
+    text-align: ${props => (props.type === "controls" ? "center" : "left")};
   }
   &:before {
     content: "";
