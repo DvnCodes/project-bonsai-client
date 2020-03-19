@@ -47,6 +47,14 @@ function preload() {
     frameWidth: 66,
     frameHeight: 34
   });
+  this.load.spritesheet("fireShield", "assets/fireShield.png", {
+    frameWidth: 100,
+    frameHeight: 100
+  });
+  this.load.audio("casting", "assets/casting.wav");
+  this.load.audio("death", "assets/death.wav");
+  this.load.audio("hitVic", "assets/hitVic.wav");
+  this.load.audio("hitAtt", "assets/hitAtt.wav");
 }
 
 function create() {
@@ -66,6 +74,7 @@ function create() {
   this.cameras.main.setDeadzone(10, 10);
   this.cameras.main.startFollow(dolly, true, 0.3, 0.3);
   this.cameras.main.setZoom(1);
+  this.cameras.main.setBackgroundColor("rgba(15,63,82,1)");
   let prevXs = {};
 
   //  creates animations for player and enemies
@@ -111,6 +120,14 @@ function create() {
     frameRate: 10,
     repeat: -1
   });
+  this.anims.create({
+    key: "shieldOn",
+    frames: this.anims.generateFrameNumbers("fireShield", {
+      frames: { start: 0, end: 60 }
+    }),
+    frameRate: 60,
+    repeat: -1
+  });
 
   const currentPlayers = this.socket.on("currentPlayers", players => {
     Object.keys(players).forEach(id => {
@@ -131,6 +148,7 @@ function create() {
   listOfGameListeners.newPlayer = newPlayer;
 
   const newAttack = this.socket.on("newAttack", playerInfo => {
+    this.sound.play("casting");
     displayAttacks(self, playerInfo);
   });
   listOfGameListeners.newAttack = newAttack;
@@ -164,10 +182,18 @@ function create() {
   const spellAdded = this.socket.on("spellAdded", spellInfo => {
     // console.log(socket.id);
     // console.log("thingthing", spellInfo.thing);
-    showspell(self, spellInfo.player, spellInfo.thing);
+    showspell(self, spellInfo.player, "fireShield");
   });
   listOfGameListeners.spellAdded = spellAdded;
 
+  const playerHit = this.socket.on(
+    "playerHealth",
+    (clientID, currentHealth, maxHealth) => {
+      if (this.socket.id === clientID) {
+        this.cameras.main.shake(200, 0.01);
+      }
+    }
+  );
   const playerUpdates = this.socket.on("playerUpdates", players => {
     if (players[this.socket.id]) {
       if (life === undefined) {
@@ -299,14 +325,22 @@ function create() {
       }
     });
   });
-
   listOfGameListeners.attackUpdates = attackUpdates;
+
+  this.socket.on("hit", (attackerID, victimID) => {
+    if (socket.id === attackerID) {
+      self.sound.play("hitAtt");
+    }
+    if (socket.id === victimID) {
+      self.sound.play("hitVic");
+    }
+  });
 
   const onDie = this.socket.on("onDie", playerID => {
     self.players.getChildren().forEach(player => {
       if (player.playerID === playerID) {
         // self.add.image(player.x, player.y, "dead");
-        console.log("DEAD");
+        self.sound.play("death");
         player.destroy();
         let deathLocation = self.load.image(player.x, player.y, "star");
       }
@@ -426,7 +460,6 @@ function update() {
     this.socket.emit("attackInput", this.direction);
   }
   if (Phaser.Input.Keyboard.JustDown(wu)) {
-    console.log("something!!!");
     this.socket.emit("spell", "firering");
   }
 }
@@ -479,7 +512,7 @@ function displayAttacks(self, playerInfo) {
 }
 
 function displayName(self, player) {
-  let text = `${player.username} ${player.playerLevel} `;
+  let text = `${player.username}`;
   const playerName = self.add.bitmapText(
     player.x,
     player.y - 40,
@@ -495,9 +528,10 @@ function displayName(self, player) {
 function showspell(self, player, sprite) {
   const myspell = self.add
     .sprite(player.x, player.y, sprite)
-    .setDisplaySize(125, 125);
+    .setDisplaySize(250, 250);
   myspell.spellID = player.playerID;
   self.spells.add(myspell);
+  myspell.anims.play("shieldOn", true);
 }
 
 function displayEnemyLife(self, player) {
@@ -519,8 +553,8 @@ function displayEnemyLife(self, player) {
 const gameSceneConfig = {
   type: Phaser.AUTO,
   parent: "gameWindow",
-  width: 1280,
-  height: 800,
+  width: "100%",
+  height: "100%",
   physics: {
     default: "arcade",
     arcade: {

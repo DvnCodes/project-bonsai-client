@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-// import "./App.css";
-
+import { StyledButton } from "../Styles/ui.styles";
 class QuestionCard extends Component {
   state = {
     correctAnswer: "",
@@ -16,25 +15,26 @@ class QuestionCard extends Component {
     return (
       <header>
         {" "}
-        <ol>
+        <ol style={{ listStyleType: "none", margin: 0, padding: 0 }}>
           {answers.map((answer, i) => {
+            const correctOrIncorrect =
+              answered && answer === question.correctA
+                ? "correct"
+                : answer !== question.correctA && index === i
+                ? "incorrect"
+                : null;
+
             return (
-              <li
-                className={
-                  answered && answer === question.correctA
-                    ? "correct_answer"
-                    : answer !== question.correctA && index === i
-                    ? "incorrect_answer"
-                    : null
-                }
-              >
-                <button
+              <li>
+                <StyledButton
                   onClick={e => {
                     this.correctAnswer(e, answer, i);
                   }}
+                  colour={correctOrIncorrect}
+                  correctAnswer={question.correctA}
                 >
                   {answer}
-                </button>
+                </StyledButton>
               </li>
             );
           })}
