@@ -11,3 +11,5 @@ export const HeadingText = styled.h1`
   line-height: 1.3em;
   text-transform: uppercase;
 `;
+
+export const QuizTitle = styled.h1``;

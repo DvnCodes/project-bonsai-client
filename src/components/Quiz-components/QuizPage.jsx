@@ -1,9 +1,14 @@
 import React, { Component } from "react";
 import Timer from "./Timer";
+import QuizTitle from "./QuizTitle";
 import QuizResultPage from "./QuizResultPage";
+import QuestionAndScore from "./QuestionAndScore";
 import QuestionCard from "./QuestionCards";
 import { Redirect } from "@reach/router";
+import ParallaxForest from "../Styles/ParallaxForest";
+
 import "../../App.css";
+import { QuizContainer } from "../Styles/container.styles";
 
 class QuizPage extends Component {
   state = {
@@ -62,41 +67,45 @@ class QuizPage extends Component {
     } = this.state;
 
     return (
-      <div>
-        <h1>Quiz</h1>
-        {toGame && <Redirect noThrow to="/game" />}
+      <>
+        <ParallaxForest />
+        <QuizContainer>
+          <QuizTitle />
+          {toGame && <Redirect noThrow to="/game" />}
 
-        {Date.now() === quizFinishTime && this.quizOver}
-        {questions.length > 0 && (
-          <>
-            {" "}
-            {!quizOver ? (
-              <>
-                <Timer seconds={30} timeUp={this.quizOver} />
+          {Date.now() === quizFinishTime && this.quizOver}
+          {questions.length > 0 && (
+            <>
+              {" "}
+              {!quizOver ? (
+                <>
+                  <Timer seconds={60} timeUp={this.quizOver} />
 
+                  <QuestionAndScore
+                    score={score}
+                    question={questions[currentQuestion].q}
+                  />
+                  <QuestionCard
+                    answers={answers[currentQuestion]}
+                    question={questions[currentQuestion]}
+                    handleAnswer={this.handleAnswer}
+                  />
+                </>
+              ) : (
+                <>
+                  <h2>Game Starting in:</h2>
 
-                <p>Score: {score}</p>
-                <h2>{questions[currentQuestion].q}?</h2>
-                <QuestionCard
-                  answers={answers[currentQuestion]}
-                  question={questions[currentQuestion]}
-                  handleAnswer={this.handleAnswer}
-                />
-              </>
-            ) : (
-              <>
-                <h2>Game Starting in:</h2>
-
-                <Timer seconds={1} timeUp={this.startGame} />
-                <QuizResultPage
-                  score={this.state.score}
-                  quizResults={this.state.quizResults}
-                />
-              </>
-            )}
-          </>
-        )}
-      </div>
+                  <Timer seconds={1} timeUp={this.startGame} />
+                  <QuizResultPage
+                    score={this.state.score}
+                    quizResults={this.state.quizResults}
+                  />
+                </>
+              )}
+            </>
+          )}
+        </QuizContainer>
+      </>
     );
   }
 

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { TimeBar } from "../Styles/timebar.style";
 
 class Timer extends Component {
   state = {
@@ -7,9 +8,9 @@ class Timer extends Component {
 
   render() {
     return (
-      <div>
-        <h2>{this.state.currentCount}</h2>
-      </div>
+      <>
+        <TimeBar time={this.state.currentCount} />
+      </>
     );
   }
 

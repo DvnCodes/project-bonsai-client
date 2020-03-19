@@ -605,3 +605,67 @@ export const ChatMessageHistory = styled.ul`
     }
   }
 `;
+
+export const QuizContainer = styled.section`
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  background-color: ${theme.e};
+  z-index: 1;
+  width: 60%;
+  height: 70vh;
+  max-height: 70vh;
+  margin: 20px 10px 30px 10px;
+  box-shadow: inset -10px -10px 0px 0px rgba(0, 0, 0, 0.3);
+  position: relative;
+  &:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: content-box;
+    top: -10px;
+    left: 0;
+    border-top: 10px black solid;
+    border-bottom: 10px black solid;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: content-box;
+    top: 0;
+    left: -10px;
+    border-left: 10px black solid;
+    border-right: 10px black solid;
+  }
+
+  .LobbyControls {
+    height: 95%;
+    width: 25%;
+    max-width: 500px;
+    flex-grow: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .LobbyMessaging {
+    flex-grow: 1;
+    height: 95%;
+    z-index: 3;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  h2 {
+    font-size: 16px;
+  }
+`;
