@@ -79,7 +79,7 @@ class QuizPage extends Component {
               {" "}
               {!quizOver ? (
                 <>
-                  <Timer seconds={60} timeUp={this.quizOver} />
+                  <Timer seconds={30} timeUp={this.quizOver} />
 
                   <QuestionAndScore
                     score={score}
