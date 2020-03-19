@@ -652,6 +652,12 @@ export const ChatMessageHistory = styled.ul`
   }
 `;
 
+
+export const GameWindow = styled.section`
+  width: 88vw;
+  height: 75vh;
+`;
+
 export const QuizContainer = styled.section`
   flex-grow: 1;
   display: flex;
