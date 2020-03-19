@@ -3,7 +3,7 @@ import { Link } from "@reach/router";
 import { GameSummaryContainer } from "../Styles/container.styles";
 import ParallaxForest from "../Styles/ParallaxForest";
 import { StyledButton } from "../Styles/ui.styles";
-import star from "../../assets/star2.png";
+import star from "../../assets/star.png";
 
 class GameSummary extends Component {
   state = { statsData: this.props.statsData };
@@ -46,10 +46,10 @@ class GameSummary extends Component {
                 .map(ID => {
                   return (
                     <p key={ID} className="playerTile">
-                      {this.state.statsData[ID].username} <br></br>
-                      RANK: {this.state.statsData[ID].rank}
+                      {this.state.statsData[ID].rank + ": "}
+                      {this.state.statsData[ID].username}
                       <br></br>
-                      KILLS: {this.state.statsData[ID].kills}
+                      BANISHMENTS: {this.state.statsData[ID].kills}
                       <br></br>
                       HITS: {this.state.statsData[ID].hits}
                       <br></br>

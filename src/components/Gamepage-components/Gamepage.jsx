@@ -113,6 +113,11 @@ class Gamepage extends Component {
     this.props.socket.off("playerUpdates");
     this.props.socket.off("spellUpdates");
     this.props.socket.off("attackUpdates");
+    this.props.socket.off("hit");
+    this.props.socket.off("playerInput");
+    this.props.socket.off("gameLoaded");
+    this.props.socket.off("attackInput");
+    this.props.socket.off("spell");
     this.props.socket.off("playerHealth");
   }
 }
