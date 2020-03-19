@@ -61,3 +61,12 @@ body {
   background-color: red;
   color: red;
 }
+
+.score {
+  font-size: 0.8em;
+  padding-bottom: 1em;
+}
+
+.question {
+  font-size: 2.5em;
+}
