@@ -47,6 +47,8 @@ function preload() {
     frameWidth: 66,
     frameHeight: 34
   });
+  this.load.audio("casting", "assets/casting.wav");
+  this.load.audio("death", "assets/death.wav");
 }
 
 function create() {
@@ -131,6 +133,8 @@ function create() {
   listOfGameListeners.newPlayer = newPlayer;
 
   const newAttack = this.socket.on("newAttack", playerInfo => {
+    this.sound.play("casting");
+
     displayAttacks(self, playerInfo);
   });
   listOfGameListeners.newAttack = newAttack;
@@ -306,7 +310,7 @@ function create() {
     self.players.getChildren().forEach(player => {
       if (player.playerID === playerID) {
         // self.add.image(player.x, player.y, "dead");
-        console.log("DEAD");
+        self.sound.play("death");
         player.destroy();
         let deathLocation = self.load.image(player.x, player.y, "star");
       }
