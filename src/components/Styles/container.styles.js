@@ -399,7 +399,53 @@ export const ParallaxForestContainer = styled.div`
 `;
 
 export const InstructionsBlock = styled.div`
-  z-index: 3;
+  color: black;
+  background-color: ${props => (props.color === "red" ? theme.a : theme.d)};
+  z-index: 1;
+  width: 90%;
+  margin: 20px 10px 30px 10px;
+  box-shadow: inset -10px -10px 0px 0px rgba(0, 0, 0, 0.3);
+  position: relative;
+  text-align: center;
+  h3 {
+    padding: 5px;
+    margin: 5px;
+  }
+  ul {
+    padding: 0;
+    list-style-position: inside;
+    list-style-image: ${props =>
+      props.type === "controls" ? "none" : "square"};
+  }
+
+  li {
+    font-size: 0.7em;
+    margin: 10px;
+    text-align: ${props => (props.type === "controls" ? "center" : "left")};
+  }
+  &:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: content-box;
+    top: -10px;
+    left: 0;
+    border-top: 10px black solid;
+    border-bottom: 10px black solid;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: content-box;
+    top: 0;
+    left: -10px;
+    border-left: 10px black solid;
+    border-right: 10px black solid;
+  }
 `;
 
 export const GameSummaryContainer = styled.section`

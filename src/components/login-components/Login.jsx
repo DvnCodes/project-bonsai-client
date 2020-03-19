@@ -44,12 +44,39 @@ class Login extends React.Component {
           </LoginForm>
         )}
         {this.state.loggedIn === true && (
-          <InstructionsBlock>
-            <h2> Login Authorised..</h2>
+          <>
+            <InstructionsBlock>
+              <h3> Login Authorised</h3>
+              <ul>
+                <li>
+                  The realms most mathematically adept wizards have gathered to
+                  prove themselves as the true mathmagician, you must fire
+                  spells and dodge them until only one mage is left.
+                </li>
+                <li>But first... A quiz to test your magic</li>
+                <li>Chat in the lobby while you wait for players!</li>
+                <li>
+                  Answer as many questions as you can before the time runs out.
+                </li>
+                <li>
+                  Each correct answer will make your wizard more powerful. But
+                  don't just guess, incorrect answers will weaken him.
+                </li>
+              </ul>
+            </InstructionsBlock>
+            <InstructionsBlock color="red" type="controls">
+              <h3>Controls</h3>
+              <ul>
+                <li>Arrow keys to move</li>
+                <li>Spacebar to fire</li>
+                <li>E to shield momentarily against spells</li>
+              </ul>
+            </InstructionsBlock>
+
             <Link to="/lobby">
               <StyledButton>JOIN LOBBY</StyledButton>{" "}
             </Link>
-          </InstructionsBlock>
+          </>
         )}
       </PrimaryContainer>
     );
