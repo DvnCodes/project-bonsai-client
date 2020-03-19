@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import Timer from "./Timer";
 import QuizResultPage from "./QuizResultPage";
+import QuestionCard from "./QuestionCards";
 import { Redirect } from "@reach/router";
+import "../../App.css";
 
 class QuizPage extends Component {
   state = {
@@ -13,9 +15,9 @@ class QuizPage extends Component {
     ],
     answers: [],
     currentQuestion: 0,
-    answer: null,
     score: 0,
     answeredAll: false,
+
     quizOver: false,
     quizFinishTime: null,
     toGame: false,
@@ -24,8 +26,15 @@ class QuizPage extends Component {
 
   componentDidMount() {
     this.props.socket.emit("sendQuizQuestions");
-    this.props.socket.on("beginQuiz", (questionsList, finishTime) => {
-      this.setState({ questions: questionsList, quizFinishTime: finishTime });
+    this.props.socket.on("beginQuiz", (questionsAndAnswers, finishTime) => {
+      const [allQuestions, allAnswers] = questionsAndAnswers;
+      console.log(allAnswers, allQuestions);
+
+      this.setState({
+        questions: allQuestions,
+        answers: allAnswers,
+        quizFinishTime: finishTime
+      });
     });
     this.props.socket.on("updateClientDetails", updatedDetails => {
       this.props.updateClientDetails(updatedDetails);
@@ -36,37 +45,26 @@ class QuizPage extends Component {
     this.props.socket.off("beginQuiz");
     this.props.socket.off("updateClientDetails");
   }
+
   render() {
     const {
       questions,
+      answers,
       currentQuestion,
       quizOver,
       quizFinishTime,
       answeredAll,
       score,
-      toGame
+      toGame,
+      correct,
+      correctAnswer,
+      index
     } = this.state;
-    let answers;
-
-    if (questions[currentQuestion]) {
-      answers = [
-        questions[currentQuestion].correctA,
-        ...questions[currentQuestion].incorrectAs
-      ];
-
-      for (let i = answers.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * i);
-        const temp = answers[i];
-        answers[i] = answers[j];
-        answers[j] = temp;
-      }
-    }
 
     return (
       <div>
         <h1>Quiz</h1>
         {toGame && <Redirect noThrow to="/game" />}
-        {/* {questions.length > 0 && ( */}
 
         {Date.now() === quizFinishTime && this.quizOver}
         {questions.length > 0 && (
@@ -74,23 +72,21 @@ class QuizPage extends Component {
             {" "}
             {!quizOver ? (
               <>
-                <Timer seconds={20} timeUp={this.quizOver} />
+                <Timer seconds={30} timeUp={this.quizOver} />
+
                 <p>Score: {score}</p>
-                <h2>{questions[currentQuestion].q} = ?</h2>
-                <ul>
-                  {answers.map((answer, i) => {
-                    return (
-                      <li key={i}>
-                        <button onClick={this.handleAnswer}>{answer}</button>
-                      </li>
-                    );
-                  })}
-                </ul>
+                <h2>{questions[currentQuestion].q}?</h2>
+                <QuestionCard
+                  answers={answers[currentQuestion]}
+                  question={questions[currentQuestion]}
+                  handleAnswer={this.handleAnswer}
+                />
               </>
             ) : (
               <>
                 <h2>Game Starting in:</h2>
-                <Timer seconds={5} timeUp={this.startGame} />
+
+                <Timer seconds={10} timeUp={this.startGame} />
                 <QuizResultPage
                   score={this.state.score}
                   quizResults={this.state.quizResults}
@@ -103,49 +99,60 @@ class QuizPage extends Component {
     );
   }
 
-  handleAnswer = e => {
+  handleAnswer = (e, answer) => {
+    console.log("handler");
     const { questions, currentQuestion } = this.state;
-    if (parseInt(e.target.innerText) === questions[currentQuestion].correctA) {
-      this.setState(currentState => {
-        const nextQuestion = currentState.currentQuestion + 1;
-        const newScore = currentState.score + 1;
+    if (parseInt(answer) === questions[currentQuestion].correctA) {
+      // this.setState({ correct: true }, () =>
+      setTimeout(() => {
+        this.setState(currentState => {
+          const nextQuestion = currentState.currentQuestion + 1;
+          const newScore = currentState.score + 1;
 
-        const newResults = [...currentState.quizResults];
-        newResults.push([this.state.questions[currentQuestion], "correct"]);
+          const newResults = [...currentState.quizResults];
+          newResults.push([this.state.questions[currentQuestion], "correct"]);
 
-        return {
-          currentQuestion: nextQuestion,
-          score: newScore,
-          quizResults: newResults
-        };
-      });
+          return {
+            currentQuestion: nextQuestion,
+            score: newScore,
+            quizResults: newResults
+          };
+        });
+      }, 700);
+      // );
     }
-    if (
-      parseInt(e.target.innerText) !== questions[currentQuestion].correctA &&
-      this.state.score > 1
-    ) {
-      this.setState(currentState => {
-        const nextQuestion = currentState.currentQuestion + 1;
-        const newScore = currentState.score - 1;
-        const newResults = [...currentState.quizResults];
-        newResults.push([this.state.questions[currentQuestion], "incorrect"]);
+    if (parseInt(answer) !== questions[currentQuestion].correctA) {
+      // this.setState(
+      //   {
+      //     correct: false,
+      //     correctAnswer: questions[currentQuestion].correctA
+      //   },
+      //   () =>
+      setTimeout(() => {
+        this.setState(currentState => {
+          const nextQuestion = currentState.currentQuestion + 1;
+          const newScore = this.state.score === 0 ? 0 : currentState.score - 1;
+          const newResults = [...currentState.quizResults];
+          newResults.push([this.state.questions[currentQuestion], "incorrect"]);
 
-        return {
-          currentQuestion: nextQuestion,
-          score: newScore,
-          quizResults: newResults
-        };
-      });
-    } else {
-      this.setState(currentState => {
-        const nextQuestion = currentState.currentQuestion + 1;
-        return { currentQuestion: nextQuestion };
-      });
+          return {
+            currentQuestion: nextQuestion,
+            score: newScore,
+            quizResults: newResults
+            // correct: "",
+            // correctAnswer: null,
+            // index: null
+          };
+        });
+      }, 700);
+      //);
     }
+
     if (currentQuestion + 1 === questions.length) {
       return this.answeredAll();
     }
   };
+
   answeredAll = () => {
     this.setState({ answeredAll: true });
   };

@@ -1,5 +1,14 @@
 import React, { Component } from "react";
 import { Link, Redirect } from "@reach/router";
+import {
+  LobbyContainer,
+  PlayerList,
+  ChatMessageHistory,
+  WallBG,
+  PlayerLobbyCard
+} from "../Styles/container.styles";
+import { StyledButton, ChatForm } from "../Styles/ui.styles";
+import ParallaxForest from "../Styles/ParallaxForest";
 
 class Lobby extends Component {
   state = {
@@ -12,58 +21,50 @@ class Lobby extends Component {
     return !this.props.currentState.loggedIn ? (
       <Redirect noThrow to="/" />
     ) : (
-      <div>
+      <>
+        <ParallaxForest />
         {this.state.everyoneReady === true && <Redirect noThrow to="/quiz" />}
-        <h1>Quiz Lobby</h1>
-        {this.state.everyoneReady === false && (
-          <button onClick={this.readyUp}>READY</button>
-        )}
-        {this.state.everyoneReady === true && (
-          <Link to="/quiz">
-            <button>START QUIZ! HURRY TIMES TICKING</button>{" "}
-          </Link>
-        )}
-        <div>
-          <h2>Online Players:</h2>
-          <ul>
-            {this.state.currentLobbyGuests.map(guest => {
-              return (
-                <li key={guest.socket}>
-                  <p>{guest.username}</p>
-                </li>
-              );
-            })}
-          </ul>
-          <h2>(2 peeps needed) Joining next game:</h2>
-          <ul>
-            {this.state.currentLobbyGuests.map(guest => {
-              return (
-                guest.ready && (
-                  <li key={guest.socket}>
+        <h1>Game Lobby</h1>
+        <LobbyContainer>
+          <div className="LobbyControls">
+            <h2>Online Players:</h2>
+            <PlayerList>
+              {this.state.currentLobbyGuests.map(guest => {
+                return (
+                  <PlayerLobbyCard key={guest.socket} ready={guest.ready}>
                     <p>{guest.username}</p>
-                  </li>
-                )
-              );
-            })}
-          </ul>
-        </div>
-        <ul>
-          <h2> CHAT</h2>
-          <ul>
-            {this.state.chat.map((comment, iteratee) => {
-              return <li key={iteratee}>{comment}</li>;
-            })}
-          </ul>
-        </ul>
-        <form onSubmit={this.sendMessage}>
-          <input
-            type="text"
-            onChange={this.handleChange}
-            value={this.state.chatInput}
-          ></input>
-          <button>Send</button>
-        </form>
-      </div>
+                  </PlayerLobbyCard>
+                );
+              })}
+            </PlayerList>
+            <StyledButton
+              onClick={this.readyUp}
+              joinGame
+              readytojoingame={this.checkOwnReadyStatus()}
+            >
+              {this.checkOwnReadyStatus()
+                ? `waiting for ${4 -
+                    this.checkHowManyPlayersReady()} other players`
+                : "Join Game"}
+            </StyledButton>
+          </div>
+          <div className="LobbyMessaging">
+            <ChatMessageHistory>
+              {this.state.chat.map((comment, iteratee) => {
+                return <li key={iteratee}>{comment}</li>;
+              })}
+            </ChatMessageHistory>
+            <ChatForm onSubmit={this.sendMessage}>
+              <input
+                type="text"
+                onChange={this.handleChange}
+                value={this.state.chatInput}
+              ></input>
+              <StyledButton>Send</StyledButton>
+            </ChatForm>
+          </div>
+        </LobbyContainer>
+      </>
     );
   }
   componentDidMount() {
@@ -150,6 +151,20 @@ class Lobby extends Component {
 
     this.props.socket.emit("lobbyMessageSend", this.state.chatInput);
     this.setState({ chatInput: "" });
+  };
+  checkOwnReadyStatus = () => {
+    const ownClient = this.state.currentLobbyGuests.find(guest => {
+      return guest.socket === this.props.socket.id;
+    });
+    if (ownClient === undefined) return false;
+    else return ownClient.ready;
+  };
+  checkHowManyPlayersReady = () => {
+    const playerReadyCount = this.state.currentLobbyGuests.reduce(
+      (acc, curr) => acc + (curr.ready === true && 1),
+      0
+    );
+    return playerReadyCount;
   };
 }
 

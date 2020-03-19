@@ -6,9 +6,10 @@ class Timer extends Component {
   };
 
   render() {
+    const { currentCount } = this.state;
     return (
       <div>
-        <h2>{this.state.currentCount}</h2>
+        <h2>{currentCount}</h2>
       </div>
     );
   }
@@ -17,6 +18,9 @@ class Timer extends Component {
     this.setState({ currentCount: this.props.seconds });
     this.intervalId = setInterval(this.timer.bind(this), 1000);
   }
+
+  componentDidUpdate(prevProps, prevState) {}
+
   componentWillUnmount() {
     clearInterval(this.intervalId);
   }

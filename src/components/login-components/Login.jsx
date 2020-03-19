@@ -2,9 +2,11 @@ import React from "react";
 import { Link } from "@reach/router";
 import {
   PrimaryContainer,
-  MegaNotificationContainer
+  MegaNotificationContainer,
+  InstructionsBlock
 } from "../Styles/container.styles";
-import { StyledButton } from "../Styles/ui.styles";
+import { StyledButton, LoginForm } from "../Styles/ui.styles";
+import ParallaxForest from "../Styles/ParallaxForest";
 
 class Login extends React.Component {
   state = {
@@ -16,8 +18,9 @@ class Login extends React.Component {
     const { username } = this.state;
     return (
       <PrimaryContainer>
+        <ParallaxForest />
         {this.state.loggedIn === false && (
-          <form onSubmit={this.handleSubmit}>
+          <LoginForm onSubmit={this.handleSubmit}>
             <input
               className="login-name-input"
               type="text"
@@ -25,6 +28,8 @@ class Login extends React.Component {
               value={username}
               name="username"
               onChange={this.handleInput}
+              maxLength={15}
+              required
             ></input>
             {/* <input
               className="login-password-input"
@@ -36,13 +41,40 @@ class Login extends React.Component {
             ></input> */}
 
             <StyledButton>log in</StyledButton>
-          </form>
+          </LoginForm>
         )}
         {this.state.loggedIn === true && (
           <>
-            <p> Login Authorised..</p>
+            <InstructionsBlock>
+              <h3> Login Authorised</h3>
+              <ul>
+                <li>
+                  The realms most mathematically adept wizards have gathered to
+                  prove themselves as the true mathmagician, you must fire
+                  spells and dodge them until only one mage is left.
+                </li>
+                <li>But first... A quiz to test your magic</li>
+                <li>Chat in the lobby while you wait for players!</li>
+                <li>
+                  Answer as many questions as you can before the time runs out.
+                </li>
+                <li>
+                  Each correct answer will make your wizard more powerful. But
+                  don't just guess, incorrect answers will weaken him.
+                </li>
+              </ul>
+            </InstructionsBlock>
+            <InstructionsBlock color="red" type="controls">
+              <h3>Controls</h3>
+              <ul>
+                <li>Arrow keys to move</li>
+                <li>Spacebar to fire</li>
+                <li>E to shield momentarily against spells</li>
+              </ul>
+            </InstructionsBlock>
+
             <Link to="/lobby">
-              <button>JOIN LOBBY</button>{" "}
+              <StyledButton>JOIN LOBBY</StyledButton>{" "}
             </Link>
           </>
         )}
