@@ -651,3 +651,8 @@ export const ChatMessageHistory = styled.ul`
     }
   }
 `;
+
+export const GameWindow = styled.section`
+  width: 88vw;
+  height: 75vh;
+`;
