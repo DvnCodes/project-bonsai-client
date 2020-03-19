@@ -512,7 +512,7 @@ function displayAttacks(self, playerInfo) {
 }
 
 function displayName(self, player) {
-  let text = `${player.username} ${player.playerLevel} `;
+  let text = `${player.username}`;
   const playerName = self.add.bitmapText(
     player.x,
     player.y - 40,
