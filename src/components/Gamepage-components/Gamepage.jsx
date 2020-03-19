@@ -4,7 +4,8 @@ import { gameSceneConfig } from "../../scenes/gameScene";
 import { Redirect } from "@reach/router";
 import {
   MegaNotificationContainer,
-  GameBorderUI
+  GameBorderUI,
+  GameWindow
 } from "../Styles/container.styles";
 import PlayerStatsPane from "./PlayerStatsPane";
 
@@ -34,21 +35,25 @@ class Gamepage extends Component {
             <h2>{this.state.winner} wins!</h2>
           </MegaNotificationContainer>
         )}
-        <div id="gameWindow">
+        {isBanished && (
+          <MegaNotificationContainer>
+            <h2>BANISHED!</h2>
+          </MegaNotificationContainer>
+        )}
+        <GameWindow id="gameWindow">
           {this.state.inGame ? (
             <IonPhaser game={this.state.game} />
           ) : (
             <h3>game not ready...</h3>
           )}
-          {isBanished && <h1>BANISHED</h1>}
-        </div>
+        </GameWindow>
         <GameBorderUI>
           <div className="borderRight"></div>
           <div className="borderLeft"></div>
-          {/* <div className="borderTop"></div> */}
+          <div className="borderTop"></div>
           <div className="borderTopLeft"></div>
           <div className="borderTopRight"></div>
-          {/* <div className="borderBottom"></div> */}
+          <div className="borderBottom"></div>
           <div className="borderBottomLeft"></div>
           <div className="borderBottomRight"></div>
         </GameBorderUI>
@@ -74,7 +79,7 @@ class Gamepage extends Component {
     this.props.socket.on(
       "playerHealth",
       (clientID, currentHealth, maxHealth) => {
-        console.log(clientID, currentHealth, maxHealth);
+        // console.log(clientID, currentHealth, maxHealth);
         if (this.props.socket.id === clientID) {
           const healthPercentage = (currentHealth / maxHealth) * 100;
           console.log(healthPercentage);
@@ -108,7 +113,7 @@ class Gamepage extends Component {
     this.props.socket.off("playerUpdates");
     this.props.socket.off("spellUpdates");
     this.props.socket.off("attackUpdates");
-    this.props.socket.off("onDie");
+    this.props.socket.off("playerHealth");
   }
 }
 

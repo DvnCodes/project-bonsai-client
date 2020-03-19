@@ -70,6 +70,7 @@ function create() {
   this.cameras.main.setDeadzone(10, 10);
   this.cameras.main.startFollow(dolly, true, 0.3, 0.3);
   this.cameras.main.setZoom(1);
+  this.cameras.main.setBackgroundColor("rgba(15,63,82,1)");
   let prevXs = {};
 
   //  creates animations for player and enemies
@@ -173,6 +174,14 @@ function create() {
   });
   listOfGameListeners.spellAdded = spellAdded;
 
+  const playerHit = this.socket.on(
+    "playerHealth",
+    (clientID, currentHealth, maxHealth) => {
+      if (this.socket.id === clientID) {
+        this.cameras.main.shake(200, 0.01);
+      }
+    }
+  );
   const playerUpdates = this.socket.on("playerUpdates", players => {
     if (players[this.socket.id]) {
       if (life === undefined) {
@@ -532,8 +541,8 @@ function displayEnemyLife(self, player) {
 const gameSceneConfig = {
   type: Phaser.AUTO,
   parent: "gameWindow",
-  width: 1280,
-  height: 800,
+  width: "100%",
+  height: "100%",
   physics: {
     default: "arcade",
     arcade: {
