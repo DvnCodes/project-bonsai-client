@@ -12,8 +12,6 @@ import GameSummary from "./components/Gamepage-components/GameSummary";
 // const socket = socketIOClient("masters-of-maths.herokuapp.com");
 const socket = socketIOClient("localhost:8080");
 
-
-
 class App extends React.Component {
   state = {
     clientDetails: { loggedIn: false },
@@ -43,7 +41,7 @@ class App extends React.Component {
           audioMute={this.state.audioMute}
         />
         <audio
-          src="./assets/battleMusic.wav"
+          src="./assets/battleMusic.mp3"
           autoPlay={true}
           muted={this.state.audioMute}
         />
