@@ -4,7 +4,7 @@
      "export":
         {
          "format":"json",
-         "target":"..\/..\/..\/..\/project-bonsai-server\/authoratitive_server\/assets\/forestLevel.json"
+         "target":"forestLevel.json"
         }
     },
  "height":25,
