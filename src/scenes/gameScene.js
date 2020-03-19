@@ -13,8 +13,9 @@ let listOfGameListeners = {};
 function preload() {
   // console.log("hello");
   this.load.image("star", "assets/star.png");
-  this.load.image("tiles", "assets/rogue.png");
-  this.load.tilemapTiledJSON("map", "assets/mapTest.json");
+  this.load.image("background", "assets/forestMap/backgroundExtrude.png");
+  this.load.image("decorative", "assets/forestMap/decorativeExtrude.png");
+  this.load.tilemapTiledJSON("map", "assets/forestMap/forestLevel.json");
   this.load.image("fireball", "assets/spell.png");
   this.load.image("life2", "assets/2.png");
   this.load.image("life1", "assets/1.png");
@@ -302,9 +303,28 @@ function create() {
 
   const map = this.make.tilemap({ key: "map" });
 
-  const tileset = map.addTilesetImage("rogue", "tiles");
-  const layerOne = map.createStaticLayer("floor", tileset, 0, 0);
-  const layerTwo = map.createStaticLayer("walls", tileset, 0, 0);
+  const tileset = map.addTilesetImage("background", "background", 32, 32, 1, 2);
+  const decorativeTileset = map.addTilesetImage(
+    "decorative",
+    "decorative",
+    32,
+    32,
+    1,
+    2
+  );
+
+  const ground = map.createStaticLayer("ground", tileset, 0, 0);
+  const obstacles = map.createStaticLayer("obstacles", tileset, 0, 0);
+  const walkables = map.createStaticLayer("walkables", tileset, 0, 0);
+  const obstacleDecorations = map.createStaticLayer(
+    "obstacleDecorations",
+    decorativeTileset,
+    0,
+    0
+  );
+  const above = map.createStaticLayer("above", decorativeTileset, 0, 0);
+
+  above.setDepth(10);
 }
 
 function update() {
