@@ -272,8 +272,8 @@ export const WallBG = styled.div`
 `;
 
 export const LogoImage = styled.img`
-  width: 450px;
-  height: 300px;
+  width: 375px;
+  height: 250px;
   z-index: 5;
   opacity: 1;
   animation: fadeIn 3s ease 1;
