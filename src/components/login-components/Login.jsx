@@ -20,20 +20,21 @@ class Login extends React.Component {
     return (
       <PrimaryContainer>
         <ParallaxForest />
-        <LogoImage src="./assets/qwizardLogo.png" />
         {this.state.loggedIn === false && (
-          <LoginForm onSubmit={this.handleSubmit}>
-            <input
-              className="login-name-input"
-              type="text"
-              placeholder="enter username"
-              value={username}
-              name="username"
-              onChange={this.handleInput}
-              maxLength={15}
-              required
-            ></input>
-            {/* <input
+          <>
+            <LogoImage src="./assets/qwizardLogo.png" />
+            <LoginForm onSubmit={this.handleSubmit}>
+              <input
+                className="login-name-input"
+                type="text"
+                placeholder="enter username"
+                value={username}
+                name="username"
+                onChange={this.handleInput}
+                maxLength={15}
+                required
+              ></input>
+              {/* <input
               className="login-password-input"
               type="password"
               placeholder="enter password"
@@ -42,8 +43,9 @@ class Login extends React.Component {
               onChange={this.handleInput}
             ></input> */}
 
-            <StyledButton>log in</StyledButton>
-          </LoginForm>
+              <StyledButton>log in</StyledButton>
+            </LoginForm>
+          </>
         )}
         {this.state.loggedIn === true && (
           <>
