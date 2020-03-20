@@ -3,7 +3,8 @@ import { Link } from "@reach/router";
 import {
   PrimaryContainer,
   MegaNotificationContainer,
-  InstructionsBlock
+  InstructionsBlock,
+  LogoImage
 } from "../Styles/container.styles";
 import { StyledButton, LoginForm } from "../Styles/ui.styles";
 import ParallaxForest from "../Styles/ParallaxForest";
@@ -19,6 +20,7 @@ class Login extends React.Component {
     return (
       <PrimaryContainer>
         <ParallaxForest />
+        <LogoImage src="./assets/qwizardLogo.png" />
         {this.state.loggedIn === false && (
           <LoginForm onSubmit={this.handleSubmit}>
             <input
