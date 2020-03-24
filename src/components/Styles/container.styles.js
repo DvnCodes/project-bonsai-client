@@ -271,6 +271,25 @@ export const WallBG = styled.div`
   z-index: 1;
 `;
 
+export const LogoImage = styled.img`
+  width: 375px;
+  height: 250px;
+  z-index: 5;
+  opacity: 1;
+  animation: fadeIn 3s ease 1;
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translate3d(0, -20px, 0);
+    }
+    100% {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+`;
+
 export const ParallaxForestContainer = styled.div`
   position: absolute;
   top: 0;
@@ -651,7 +670,6 @@ export const ChatMessageHistory = styled.ul`
     }
   }
 `;
-
 
 export const GameWindow = styled.section`
   width: 88vw;
