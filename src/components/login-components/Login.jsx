@@ -50,7 +50,7 @@ class Login extends React.Component {
         {this.state.loggedIn === true && (
           <>
             <InstructionsBlock>
-              <h3> Login Authorised</h3>
+              <h3>Welcome, {username}!</h3>
               <ul>
                 <li>
                   The realms most mathematically adept wizards have gathered to
