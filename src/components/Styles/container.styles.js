@@ -203,39 +203,18 @@ export const BarContainer = styled.section`
   width: ${props => props.val}%;
   background-color: ${props => props.color};
   height: 30px;
-  border-radius: 4px;
-  background-image: -webkit-linear-gradient(
-    top,
-    rgba(255, 255, 255, 0.3),
-    rgba(255, 255, 255, 0.05)
-  );
-  background-image: -moz-linear-gradient(
-    top,
-    rgba(255, 255, 255, 0.3),
-    rgba(255, 255, 255, 0.05)
-  );
-  background-image: -o-linear-gradient(
-    top,
-    rgba(255, 255, 255, 0.3),
-    rgba(255, 255, 255, 0.05)
-  );
-  background-image: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.3),
-    rgba(255, 255, 255, 0.05)
-  );
-  -webkit-transition: 2s linear;
-  -moz-transition: 2s linear;
-  -o-transition: 2s linear;
-  transition: 2s linear;
+  /* border-radius: 4px; */
+  border: solid 3px black;
+  -webkit-transition: 1s linear;
+  -moz-transition: 1s linear;
+  -o-transition: 1s linear;
+  transition: 1s linear;
   -webkit-transition-property: width, background-color;
   -moz-transition-property: width, background-color;
   -o-transition-property: width, background-color;
   transition-property: width, background-color;
-  -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25),
-    inset 0 1px rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25),
-    inset 0 1px rgba(255, 255, 255, 0.1);
+  -webkit-box-shadow: inset -3px -3px 0px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: inset -3px -3px 0px 0px rgba(0, 0, 0, 0.3);
 `;
 
 export const QuizResultsContainer = styled.section`
@@ -247,6 +226,11 @@ export const QuizResultsContainer = styled.section`
     grid-area: left;
     list-style: none;
     justify-self: center;
+    max-height: 100%;
+
+    ul {
+      overflow: hidden;
+    }
   }
   #gameEffects {
     grid-area: right;
@@ -418,7 +402,7 @@ export const ParallaxForestContainer = styled.div`
 `;
 
 export const InstructionsBlock = styled.div`
-  color: black;
+  color: white;
   background-color: ${props => (props.color === "red" ? theme.a : theme.d)};
   z-index: 1;
   width: 90%;
@@ -673,7 +657,7 @@ export const ChatMessageHistory = styled.ul`
 
 export const GameWindow = styled.section`
   width: 88vw;
-  height: 75vh;
+  height: 78vh;
 `;
 
 export const QuizContainer = styled.section`

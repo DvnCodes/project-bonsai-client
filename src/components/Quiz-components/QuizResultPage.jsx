@@ -5,17 +5,16 @@ class QuizResultPage extends Component {
   state = { health: 0 };
   render() {
     return (
-
       <QuizResultsContainer>
         <div id="results">
           <h2>Quiz Results</h2>
           <p>You scored: {this.props.score}</p>
           <ul>
-            {this.props.quizResults.map(result => {
+            {this.props.quizResults.map((result, i) => {
               const question = result[0];
               const answer = result[1];
               return (
-                <li id={answer}>
+                <li key={i} id={answer}>
                   {question.q} {question.correctA}{" "}
                   {answer === "correct" ? "✓" : "✗"}
                 </li>
@@ -35,14 +34,13 @@ class QuizResultPage extends Component {
           </BarContainer>
         </div>
       </QuizResultsContainer>
-
     );
   }
 
   componentDidMount() {
     setInterval(() => {
       this.setState({ health: (this.props.score + 1) * 7 });
-    }, 2000);
+    }, 500);
   }
 }
 

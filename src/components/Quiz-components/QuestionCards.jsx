@@ -4,13 +4,14 @@ class QuestionCard extends Component {
   state = {
     correctAnswer: "",
     index: null,
-    answered: false
+    answered: false,
+    isButtonDisabled: false
   };
 
   render() {
     const { question, answers } = this.props;
     const { correctAnswer, index, answered } = this.state;
-    console.log(answers, "hi");
+    // console.log(answers, "hi");
 
     return (
       <header>
@@ -25,13 +26,14 @@ class QuestionCard extends Component {
                 : null;
 
             return (
-              <li>
+              <li key={i}>
                 <StyledButton
                   onClick={e => {
                     this.correctAnswer(e, answer, i);
                   }}
                   colour={correctOrIncorrect}
                   correctAnswer={question.correctA}
+                  disabled={this.state.isButtonDisabled}
                 >
                   {answer}
                 </StyledButton>
@@ -46,15 +48,39 @@ class QuestionCard extends Component {
     const { question, handleAnswer } = this.props;
 
     answer === question.correctA
-      ? this.setState({ correctAnswer: "y", index: i, answered: true }, () =>
-          setTimeout(() => {
-            this.setState({ correctAnswer: "", index: null, answered: false });
-          }, 700)
+      ? this.setState(
+          {
+            correctAnswer: "y",
+            index: i,
+            answered: true,
+            isButtonDisabled: true
+          },
+          () =>
+            setTimeout(() => {
+              this.setState({
+                correctAnswer: "",
+                index: null,
+                answered: false,
+                isButtonDisabled: false
+              });
+            }, 1000)
         )
-      : this.setState({ correctAnswer: "n", index: i, answered: true }, () =>
-          setTimeout(() => {
-            this.setState({ correctAnswer: "", index: null, answered: false });
-          }, 700)
+      : this.setState(
+          {
+            correctAnswer: "n",
+            index: i,
+            answered: true,
+            isButtonDisabled: true
+          },
+          () =>
+            setTimeout(() => {
+              this.setState({
+                correctAnswer: "",
+                index: null,
+                answered: false,
+                isButtonDisabled: false
+              });
+            }, 1000)
         );
 
     handleAnswer(e, answer);

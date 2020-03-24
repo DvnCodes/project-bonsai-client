@@ -33,7 +33,7 @@ class QuizPage extends Component {
     this.props.socket.emit("sendQuizQuestions");
     this.props.socket.on("beginQuiz", (questionsAndAnswers, finishTime) => {
       const [allQuestions, allAnswers] = questionsAndAnswers;
-      console.log(allAnswers, allQuestions);
+      // console.log(allAnswers, allQuestions);
 
       this.setState({
         questions: allQuestions,
@@ -128,7 +128,7 @@ class QuizPage extends Component {
             quizResults: newResults
           };
         });
-      }, 700);
+      }, 1000);
       // );
     }
     if (parseInt(answer) !== questions[currentQuestion].correctA) {
@@ -154,7 +154,7 @@ class QuizPage extends Component {
             // index: null
           };
         });
-      }, 700);
+      }, 1000);
       //);
     }
 

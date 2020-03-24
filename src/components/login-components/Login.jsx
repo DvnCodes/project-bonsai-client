@@ -50,7 +50,7 @@ class Login extends React.Component {
         {this.state.loggedIn === true && (
           <>
             <InstructionsBlock>
-              <h3>Welcome, {username}!</h3>
+              <h3>Welcome, {this.props.currentState.username}!</h3>
               <ul>
                 <li>
                   The realms most mathematically adept wizards have gathered to
@@ -113,6 +113,10 @@ class Login extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {}
+
+  componentWillUnmount = () => {
+    this.props.socket.off("loginAuthorised");
+  };
 }
 
 // new user button, rendering a create account component?
