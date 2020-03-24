@@ -15,7 +15,8 @@ class Lobby extends Component {
     everyoneReady: false,
     chat: [],
     chatInput: "",
-    currentLobbyGuests: []
+    currentLobbyGuests: [],
+    disableJoinButton: false
   };
   render() {
     return !this.props.currentState.loggedIn ? (
@@ -41,9 +42,10 @@ class Lobby extends Component {
               onClick={this.readyUp}
               joinGame
               readytojoingame={this.checkOwnReadyStatus()}
+              disabled={this.state.disableJoinButton}
             >
               {this.checkOwnReadyStatus()
-                ? `waiting for ${4 -
+                ? `waiting for ${3 -
                     this.checkHowManyPlayersReady()} other players`
                 : "Join Game"}
             </StyledButton>
@@ -126,7 +128,11 @@ class Lobby extends Component {
 
     //join next quiz messages
     this.props.socket.on("startGame", lobbyData => {
-      this.setState({ everyoneReady: true });
+      this.setState({ disableJoinButton: true }, () => {
+        setTimeout(() => {
+          this.setState({ everyoneReady: true });
+        }, 3000);
+      });
     });
   }
 
