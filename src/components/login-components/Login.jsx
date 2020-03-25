@@ -8,12 +8,14 @@ import {
 } from "../Styles/container.styles";
 import { StyledButton, LoginForm } from "../Styles/ui.styles";
 import ParallaxForest from "../Styles/ParallaxForest";
+import Loading from "./Loading";
 
 class Login extends React.Component {
   state = {
     loggedIn: false,
     username: "",
-    password: ""
+    password: "",
+    loading: false
   };
   render() {
     const { username } = this.state;
@@ -23,6 +25,7 @@ class Login extends React.Component {
         {this.state.loggedIn === false && (
           <>
             <LogoImage src="./assets/qwizardLogo.png" />
+            {this.state.loading && <Loading />}
             <LoginForm onSubmit={this.handleSubmit}>
               <input
                 className="login-name-input"
@@ -101,14 +104,17 @@ class Login extends React.Component {
     this.props.socket.emit("playerLogin", username);
     // send emit saying new player. receive list of current players in lobby from server. Set state with players in lobby.
     //playersInLobby(players)
-    this.setState({ username: "", password: "" });
+    this.setState({ username: "", password: "", loading: true });
   };
 
   componentDidMount() {
     this.props.socket.on("loginAuthorised", updatedClientDetails => {
-      this.setState({ loggedIn: updatedClientDetails.loggedIn }, () => {
-        this.props.updateClientDetails(updatedClientDetails);
-      });
+      this.setState(
+        { loggedIn: updatedClientDetails.loggedIn, loading: false },
+        () => {
+          this.props.updateClientDetails(updatedClientDetails);
+        }
+      );
     });
   }
 
