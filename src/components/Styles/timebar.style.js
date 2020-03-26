@@ -1,25 +1,28 @@
 import styled from "styled-components";
 import theme from "./themes";
 
-export const TimeBar = styled.h1`
-  background: ${props =>
-    props.time > 20
-      ? theme.b
-      : props.time < 20
-      ? theme.a
-      : props.time < 10
-      ? theme.c
-      : null};
-
+export const TimeBar = styled.div`
   height: 4vh;
-  animation: TimeBarAnimation 30s linear 1;
+  animation: TimeBarAnimation ${props => props.time}s linear 1;
+  border: solid black 3px;
+  -webkit-box-shadow: inset -3px -3px 0px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: inset -3px -3px 0px 0px rgba(0, 0, 0, 0.3);
+  /* border: 1px solid black; */
 
   @keyframes TimeBarAnimation {
     0% {
       width: 500px;
+      background: ${theme.b};
+    }
+    70% {
+      background: ${theme.b};
+    }
+    72% {
+      background: ${theme.a};
     }
     100% {
       width: 0px;
+      background: ${theme.a};
     }
   }
 `;

@@ -3,19 +3,23 @@ import { TimeBar } from "../Styles/timebar.style";
 
 class Timer extends Component {
   state = {
-    currentCount: null
+    currentCount: null,
+    timeBarLength: 30
   };
 
   render() {
     return (
       <>
-        <TimeBar time={this.state.currentCount} />
+        <TimeBar time={this.state.timeBarLength} />
       </>
     );
   }
 
   componentDidMount() {
-    this.setState({ currentCount: this.props.seconds });
+    this.setState({
+      currentCount: this.props.seconds,
+      timeBarLength: this.props.seconds
+    });
     this.intervalId = setInterval(this.timer.bind(this), 1000);
   }
   componentWillUnmount() {

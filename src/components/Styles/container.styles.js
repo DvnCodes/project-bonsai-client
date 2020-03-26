@@ -14,11 +14,12 @@ export const PrimaryContainer = styled.section`
   background-color: ${theme.e};
   flex-grow: 1;
   margin: 0;
-  padding: 1.5em 0 0 0;
+  padding: 0 0 0 0;
   border: none;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 `;
 
 export const MegaNotificationContainer = styled.aside`
@@ -203,39 +204,18 @@ export const BarContainer = styled.section`
   width: ${props => props.val}%;
   background-color: ${props => props.color};
   height: 30px;
-  border-radius: 4px;
-  background-image: -webkit-linear-gradient(
-    top,
-    rgba(255, 255, 255, 0.3),
-    rgba(255, 255, 255, 0.05)
-  );
-  background-image: -moz-linear-gradient(
-    top,
-    rgba(255, 255, 255, 0.3),
-    rgba(255, 255, 255, 0.05)
-  );
-  background-image: -o-linear-gradient(
-    top,
-    rgba(255, 255, 255, 0.3),
-    rgba(255, 255, 255, 0.05)
-  );
-  background-image: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.3),
-    rgba(255, 255, 255, 0.05)
-  );
-  -webkit-transition: 2s linear;
-  -moz-transition: 2s linear;
-  -o-transition: 2s linear;
-  transition: 2s linear;
+  /* border-radius: 4px; */
+  border: solid 3px black;
+  -webkit-transition: 1s linear;
+  -moz-transition: 1s linear;
+  -o-transition: 1s linear;
+  transition: 1s linear;
   -webkit-transition-property: width, background-color;
   -moz-transition-property: width, background-color;
   -o-transition-property: width, background-color;
   transition-property: width, background-color;
-  -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25),
-    inset 0 1px rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25),
-    inset 0 1px rgba(255, 255, 255, 0.1);
+  -webkit-box-shadow: inset -3px -3px 0px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: inset -3px -3px 0px 0px rgba(0, 0, 0, 0.3);
 `;
 
 export const QuizResultsContainer = styled.section`
@@ -247,6 +227,11 @@ export const QuizResultsContainer = styled.section`
     grid-area: left;
     list-style: none;
     justify-self: center;
+    max-height: 100%;
+
+    ul {
+      overflow: hidden;
+    }
   }
   #gameEffects {
     grid-area: right;
@@ -272,6 +257,7 @@ export const WallBG = styled.div`
 `;
 
 export const LogoImage = styled.img`
+  margin: 2em 0 0 0;
   width: 375px;
   height: 250px;
   z-index: 5;
@@ -417,8 +403,79 @@ export const ParallaxForestContainer = styled.div`
   }
 `;
 
+export const LoadingPaneContainer = styled.section`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(80, 138, 168, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+
+  div {
+    padding: 5px 10px;
+    margin: 0;
+    background-color: ${theme.c};
+    box-shadow: 6px 6px 0px ${theme.b};
+
+    box-shadow: inset -5px -5px 0px 0px rgba(0, 0, 0, 0.3);
+    position: relative;
+
+    h2 {
+      font-family: "Press Start 2P";
+      font-size: 4em;
+      margin: 0 auto;
+      color: ${theme.a};
+      text-shadow: 6px 6px 0px ${theme.b};
+      letter-spacing: 10px;
+      line-height: 1.3em;
+      text-transform: uppercase;
+    }
+    &:before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      box-sizing: content-box;
+      top: -5px;
+      left: 0;
+      border-top: 5px black solid;
+      border-bottom: 5px black solid;
+    }
+
+    &:after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      box-sizing: content-box;
+      top: 0;
+      left: -5px;
+      border-left: 5px black solid;
+      border-right: 5px black solid;
+    }
+
+    animation: bounce 1.5s ease-in-out infinite;
+    @keyframes bounce {
+      0% {
+        margin-top: 0;
+      }
+      50% {
+        margin-top: 20%;
+      }
+      100% {
+        margin-top: 0;
+      }
+    }
+  }
+`;
+
 export const InstructionsBlock = styled.div`
-  color: black;
+  color: white;
   background-color: ${props => (props.color === "red" ? theme.a : theme.d)};
   z-index: 1;
   width: 90%;
@@ -673,7 +730,7 @@ export const ChatMessageHistory = styled.ul`
 
 export const GameWindow = styled.section`
   width: 88vw;
-  height: 75vh;
+  height: 78vh;
 `;
 
 export const QuizContainer = styled.section`
